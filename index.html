@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Cloud Practitioner (CLF-C02) Quiz</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1923; color: #e8e8e8; min-height: 100vh; }
+
+  .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+  /* Header */
+  header { text-align: center; padding: 30px 0 20px; }
+  header h1 { font-size: 1.6rem; color: #ff9900; margin-bottom: 6px; }
+  header p { color: #889; font-size: 0.9rem; }
+
+  /* Stats bar */
+  .stats { display: flex; gap: 16px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
+  .stat { background: #1a2634; border-radius: 10px; padding: 12px 20px; text-align: center; min-width: 100px; }
+  .stat .num { font-size: 1.5rem; font-weight: 700; color: #ff9900; }
+  .stat .label { font-size: 0.75rem; color: #889; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Progress */
+  .progress-wrap { background: #1a2634; border-radius: 8px; height: 8px; margin: 20px 0; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, #ff9900, #ffb84d); border-radius: 8px; transition: width 0.4s ease; }
+
+  /* Start screen */
+  .start-screen { text-align: center; padding: 40px 0; }
+  .start-screen h2 { font-size: 1.3rem; margin-bottom: 20px; }
+  .domain-select { display: flex; flex-direction: column; gap: 10px; max-width: 420px; margin: 0 auto 30px; }
+  .domain-btn { background: #1a2634; border: 2px solid #2a3a4a; color: #e8e8e8; padding: 14px 18px;
+    border-radius: 10px; cursor: pointer; font-size: 0.95rem; text-align: left; transition: all 0.2s; }
+  .domain-btn:hover { border-color: #ff9900; background: #1f2f3f; }
+  .domain-btn.selected { border-color: #ff9900; background: #2a2010; }
+  .domain-btn .tag { display: inline-block; background: #ff990022; color: #ff9900; font-size: 0.7rem;
+    padding: 2px 8px; border-radius: 4px; margin-left: 8px; font-weight: 600; }
+  .count-select { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
+  .count-select label { color: #889; font-size: 0.9rem; }
+  .count-select select { background: #1a2634; color: #e8e8e8; border: 2px solid #2a3a4a; border-radius: 8px;
+    padding: 8px 14px; font-size: 1rem; cursor: pointer; }
+  .count-select select:focus { outline: none; border-color: #ff9900; }
+
+  /* Question card */
+  .question-card { background: #1a2634; border-radius: 14px; padding: 30px; margin: 20px 0; }
+  .q-domain { font-size: 0.75rem; color: #ff9900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .q-number { font-size: 0.85rem; color: #667; margin-bottom: 14px; }
+  .q-text { font-size: 1.1rem; line-height: 1.5; margin-bottom: 24px; font-weight: 500; }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { background: #0f1923; border: 2px solid #2a3a4a; border-radius: 10px; padding: 14px 18px;
+    cursor: pointer; transition: all 0.2s; font-size: 0.95rem; line-height: 1.4; display: flex; align-items: flex-start; gap: 12px; }
+  .option:hover:not(.disabled) { border-color: #ff9900; background: #1f2530; }
+  .option .letter { display: flex; align-items: center; justify-content: center; min-width: 30px; height: 30px;
+    border-radius: 50%; background: #2a3a4a; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+  .option.correct { border-color: #22c55e; background: #0f2918; }
+  .option.correct .letter { background: #22c55e; color: #000; }
+  .option.wrong { border-color: #ef4444; background: #2a1010; }
+  .option.wrong .letter { background: #ef4444; color: #fff; }
+  .option.disabled { cursor: default; opacity: 0.7; }
+  .option.correct.disabled { opacity: 1; }
+  .option.picked { border-color: #ff9900; background: #2a2010; }
+  .option.picked .letter { background: #ff9900; color: #000; }
+  .multi-hint { text-align: center; color: #ff9900; font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; }
+
+  /* Flag button */
+  .btn-flag { background: transparent; border: 2px solid #ef4444; color: #ef4444; padding: 10px 18px;
+    border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+  .btn-flag:hover { background: #ef444420; }
+  .flag-icon::before { content: "\26A0"; }
+
+  /* Explanation */
+  .explanation { background: #12202e; border-left: 4px solid #ff9900; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin-top: 20px; font-size: 0.9rem; line-height: 1.5; color: #bcc; display: none; }
+  .explanation.show { display: block; animation: fadeIn 0.3s ease; }
+
+  /* Buttons */
+  .btn { background: #ff9900; color: #000; border: none; padding: 14px 32px; border-radius: 10px;
+    font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn:hover { background: #ffb84d; transform: translateY(-1px); }
+  .btn:disabled { background: #4a4a4a; color: #888; cursor: not-allowed; transform: none; }
+  .btn-outline { background: transparent; border: 2px solid #ff9900; color: #ff9900; }
+  .btn-outline:hover { background: #ff990015; }
+  .actions { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
+
+  /* Results */
+  .results { text-align: center; padding: 30px 0; }
+  .results h2 { font-size: 1.8rem; margin-bottom: 8px; }
+  .score-circle { width: 160px; height: 160px; border-radius: 50%; margin: 24px auto;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 2.5rem; font-weight: 800; }
+  .score-circle.pass { background: radial-gradient(circle, #0f291880, #0f2918); border: 4px solid #22c55e; color: #22c55e; }
+  .score-circle.fail { background: radial-gradient(circle, #2a101080, #2a1010); border: 4px solid #ef4444; color: #ef4444; }
+  .score-circle .pct-label { font-size: 0.8rem; font-weight: 400; color: #889; }
+  .results .breakdown { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 24px 0; }
+  .results .bd-item { background: #1a2634; border-radius: 10px; padding: 14px 18px; min-width: 160px; }
+  .results .bd-item .bd-domain { font-size: 0.75rem; color: #889; margin-bottom: 4px; }
+  .results .bd-item .bd-score { font-size: 1.2rem; font-weight: 700; }
+
+  /* Review list */
+  .review-list { text-align: left; margin-top: 20px; }
+  .review-item { background: #1a2634; border-radius: 10px; padding: 18px; margin-bottom: 10px; }
+  .review-item .ri-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .review-item .ri-status { font-size: 0.8rem; font-weight: 700; padding: 3px 10px; border-radius: 6px; }
+  .review-item .ri-status.correct { background: #22c55e22; color: #22c55e; }
+  .review-item .ri-status.wrong { background: #ef444422; color: #ef4444; }
+  .review-item .ri-q { font-size: 0.95rem; margin-bottom: 6px; }
+  .review-item .ri-answer { font-size: 0.85rem; color: #889; }
+
+  .hidden { display: none !important; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Timer */
+  .timer { display: flex; align-items: center; gap: 6px; color: #889; font-size: 0.9rem; }
+  .timer svg { width: 16px; height: 16px; fill: #889; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .container { padding: 12px; }
+    .question-card { padding: 20px; }
+    header h1 { font-size: 1.3rem; }
+    .stat { min-width: 70px; padding: 8px 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>AWS Cloud Practitioner (CLF-C02)</h1>
+    <p>Interactive Practice Quiz</p>
+  </header>
+
+  <!-- START SCREEN -->
+  <div id="start-screen" class="start-screen">
+    <h2>Choose your quiz</h2>
+    <div class="domain-select">
+      <button class="domain-btn selected" data-domain="all" onclick="selectDomain(this)">
+        All Domains <span class="tag" id="all-count"></span>
+      </button>
+      <button class="domain-btn" data-domain="1" onclick="selectDomain(this)">
+        Domain 1: Cloud Concepts <span class="tag">24%</span>
+      </button>
+      <button class="domain-btn" data-domain="2" onclick="selectDomain(this)">
+        Domain 2: Security &amp; Compliance <span class="tag">30%</span>
+      </button>
+      <button class="domain-btn" data-domain="3" onclick="selectDomain(this)">
+        Domain 3: Cloud Technology &amp; Services <span class="tag">34%</span>
+      </button>
+      <button class="domain-btn" data-domain="4" onclick="selectDomain(this)">
+        Domain 4: Billing, Pricing &amp; Support <span class="tag">12%</span>
+      </button>
+    </div>
+    <div class="count-select">
+      <label>Number of questions:</label>
+      <select id="q-count">
+        <option value="10">10</option>
+        <option value="20" selected>20</option>
+        <option value="30">30</option>
+        <option value="50">50</option>
+        <option value="65">65 (exam length)</option>
+        <option value="100">100</option>
+        <option value="0">All available</option>
+      </select>
+      <label style="margin-left:12px">
+        <input type="checkbox" id="shuffle-toggle" checked style="accent-color:#ff9900"> Shuffle
+      </label>
+    </div>
+    <button class="btn" onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" class="hidden">
+    <div class="stats">
+      <div class="stat"><div class="num" id="s-question">-</div><div class="label">Question</div></div>
+      <div class="stat"><div class="num" id="s-correct" style="color:#22c55e">0</div><div class="label">Correct</div></div>
+      <div class="stat"><div class="num" id="s-wrong" style="color:#ef4444">0</div><div class="label">Wrong</div></div>
+      <div class="stat">
+        <div class="timer" id="s-timer"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 11h-2V7h2v6zm0 4h-2v-2h2v2z"/></svg><span id="timer-text">00:00</span></div>
+        <div class="label">Time</div>
+      </div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="question-card">
+      <div class="q-domain" id="q-domain"></div>
+      <div class="q-number" id="q-number"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="q-options"></div>
+      <div class="explanation" id="q-explanation"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-flag hidden" id="btn-flag" onclick="toggleFlag()" title="Report an error in this question via GitHub"><span class="flag-icon"></span> Report error</button>
+      <button class="btn btn-outline hidden" id="btn-prev" onclick="prevQuestion()">Prev</button>
+      <button class="btn hidden" id="btn-submit" onclick="submitMulti()">Submit</button>
+      <button class="btn hidden" id="btn-next" onclick="nextQuestion()">Next</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen" class="hidden results"></div>
+</div>
+
+<script src="domain1.js"></script>
+<script src="domain2.js"></script>
+<script src="domain3.js"></script>
+<script src="domain4.js"></script>
+<script>
+const ALL_QUESTIONS = [
+  ...DOMAIN1_QUESTIONS,
+  ...DOMAIN2_QUESTIONS,
+  ...DOMAIN3_QUESTIONS,
+  ...DOMAIN4_QUESTIONS
+];
+
+const DOMAIN_NAMES = {
+  1: "Domain 1: Cloud Concepts",
+  2: "Domain 2: Security & Compliance",
+  3: "Domain 3: Cloud Technology & Services",
+  4: "Domain 4: Billing, Pricing & Support"
+};
+
+let quiz = [], current = 0, score = 0, wrong = 0, answered = false, results = [], timerInterval, seconds = 0;
+let selectedDomain = "all";
+const GITHUB_REPO = 'Empyrz901/aws_pract_quiz.github.io';
+const EXAM_WEIGHTS = { 1: 0.24, 2: 0.30, 3: 0.34, 4: 0.12 };
+
+document.getElementById('all-count').textContent = ALL_QUESTIONS.length + ' Q';
+
+function selectDomain(btn) {
+  document.querySelectorAll('.domain-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedDomain = btn.dataset.domain;
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function weightedDraw(pool, count) {
+  let picked = [];
+  for (const domain in EXAM_WEIGHTS) {
+    const domainPool = shuffle(pool.filter(q => q.domain == domain));
+    const n = Math.round(count * EXAM_WEIGHTS[domain]);
+    picked = picked.concat(domainPool.slice(0, n));
+  }
+  // Fill any rounding gaps
+  const pickedSet = new Set(picked);
+  const remaining = shuffle(pool.filter(q => !pickedSet.has(q)));
+  while (picked.length < count && remaining.length) picked.push(remaining.shift());
+  return shuffle(picked).slice(0, count);
+}
+
+function startQuiz() {
+  const doShuffle = document.getElementById('shuffle-toggle').checked;
+  let pool = selectedDomain === "all" ? [...ALL_QUESTIONS] : ALL_QUESTIONS.filter(q => q.domain == selectedDomain);
+  if (doShuffle) pool = shuffle(pool);
+  let count = parseInt(document.getElementById('q-count').value);
+  if (count === 0 || count > pool.length) count = pool.length;
+
+  // Use weighted draw for exam-length when all domains selected
+  if (count === 65 && selectedDomain === "all") {
+    quiz = weightedDraw(pool, 65);
+  } else {
+    quiz = pool.slice(0, count);
+  }
+  current = 0; score = 0; wrong = 0; results = new Array(quiz.length).fill(null); answered = false; seconds = 0;
+
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('results-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds/60)).padStart(2,'0');
+    const s = String(seconds%60).padStart(2,'0');
+    document.getElementById('timer-text').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+let multiSelections = [];
+
+function renderQuestion() {
+  const q = quiz[current];
+  const alreadyAnswered = results[current] !== null;
+  answered = alreadyAnswered;
+  multiSelections = [];
+  document.getElementById('s-question').textContent = `${current+1}/${quiz.length}`;
+  document.getElementById('s-correct').textContent = score;
+  document.getElementById('s-wrong').textContent = wrong;
+  document.getElementById('progress-bar').style.width = `${((current)/quiz.length)*100}%`;
+  document.getElementById('q-domain').textContent = DOMAIN_NAMES[q.domain] + ` \u2022 Task ${q.task}`;
+  document.getElementById('q-number').textContent = `Question ${current+1} of ${quiz.length}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const isMulti = q.multi;
+  const requiredCount = isMulti ? q.ans.length : 1;
+  let hintHtml = '';
+  if (isMulti) {
+    hintHtml = `<div class="multi-hint">Select ${requiredCount} answer${requiredCount > 1 ? 's' : ''}</div>`;
+  }
+
+  const letters = 'ABCDE';
+  const optsHtml = q.opts.map((opt, i) =>
+    `<div class="option" data-idx="${i}" onclick="selectOption(${i})">
+      <span class="letter">${letters[i]}</span><span>${opt}</span>
+    </div>`
+  ).join('');
+  document.getElementById('q-options').innerHTML = hintHtml + optsHtml;
+
+  const exp = document.getElementById('q-explanation');
+
+  // Restore state if already answered (navigating back)
+  if (alreadyAnswered) {
+    const correctIndices = isMulti ? q.ans : [q.ans];
+    const optEls = document.querySelectorAll('.option');
+    optEls.forEach(el => {
+      el.classList.add('disabled');
+      const i = parseInt(el.dataset.idx);
+      if (correctIndices.includes(i)) el.classList.add('correct');
+    });
+    // Show wrong picks
+    const r = results[current];
+    if (!r.correct && r.yourAnswer !== 'Skipped') {
+      const yourIdxs = r._picks || [];
+      yourIdxs.forEach(i => { if (!correctIndices.includes(i)) optEls[i].classList.add('wrong'); });
+    }
+    exp.textContent = q.explain;
+    exp.classList.add('show');
+  } else {
+    exp.classList.remove('show');
+    exp.textContent = '';
+  }
+
+  document.getElementById('btn-flag').classList.remove('hidden');
+  document.getElementById('btn-prev').classList.toggle('hidden', current === 0);
+  document.getElementById('btn-submit').classList.add('hidden');
+  document.getElementById('btn-next').classList.remove('hidden');
+  if (alreadyAnswered) {
+    document.getElementById('btn-next').textContent = current < quiz.length - 1 ? 'Next' : 'See Results';
+  } else {
+    document.getElementById('btn-next').textContent = current < quiz.length - 1 ? 'Next' : 'Finish';
+  }
+}
+
+function selectOption(idx) {
+  if (answered) return;
+  const q = quiz[current];
+
+  // Single-answer: evaluate immediately
+  if (!q.multi) {
+    answered = true;
+    const correctIndices = [q.ans];
+    const isCorrect = correctIndices.includes(idx);
+
+    const optEls = document.querySelectorAll('.option');
+    optEls.forEach(el => {
+      el.classList.add('disabled');
+      const i = parseInt(el.dataset.idx);
+      if (correctIndices.includes(i)) el.classList.add('correct');
+    });
+    if (!isCorrect) {
+      optEls[idx].classList.add('wrong');
+      wrong++;
+    } else {
+      score++;
+    }
+
+    results[current] = { q: q.q, correct: isCorrect, yourAnswer: q.opts[idx], rightAnswer: correctIndices.map(i => q.opts[i]).join(', '), explain: q.explain, _picks: [idx] };
+    showPostAnswer();
+    return;
+  }
+
+  // Multi-answer: toggle selection
+  const requiredCount = q.ans.length;
+  const pos = multiSelections.indexOf(idx);
+  if (pos > -1) {
+    multiSelections.splice(pos, 1);
+  } else {
+    if (multiSelections.length >= requiredCount) return; // already selected enough
+    multiSelections.push(idx);
+  }
+
+  // Update visual state
+  const optEls = document.querySelectorAll('.option');
+  optEls.forEach(el => {
+    const i = parseInt(el.dataset.idx);
+    el.classList.toggle('picked', multiSelections.includes(i));
+  });
+
+  // Show/hide submit button when enough selected
+  const submitBtn = document.getElementById('btn-submit');
+  if (multiSelections.length === requiredCount) {
+    submitBtn.classList.remove('hidden');
+  } else {
+    submitBtn.classList.add('hidden');
+  }
+}
+
+function submitMulti() {
+  if (answered) return;
+  answered = true;
+  const q = quiz[current];
+  const correctIndices = q.ans;
+  const picked = [...multiSelections].sort();
+  const expected = [...correctIndices].sort();
+  const isCorrect = picked.length === expected.length && picked.every((v, i) => v === expected[i]);
+
+  const optEls = document.querySelectorAll('.option');
+  optEls.forEach(el => {
+    el.classList.remove('picked');
+    el.classList.add('disabled');
+    const i = parseInt(el.dataset.idx);
+    if (correctIndices.includes(i)) el.classList.add('correct');
+    if (multiSelections.includes(i) && !correctIndices.includes(i)) el.classList.add('wrong');
+  });
+
+  if (!isCorrect) { wrong++; } else { score++; }
+
+  results[current] = { q: q.q, correct: isCorrect, yourAnswer: multiSelections.map(i => q.opts[i]).join(', '), rightAnswer: correctIndices.map(i => q.opts[i]).join(', '), explain: q.explain, _picks: [...multiSelections] };
+  showPostAnswer();
+}
+
+function showPostAnswer() {
+  document.getElementById('s-correct').textContent = score;
+  document.getElementById('s-wrong').textContent = wrong;
+
+  const exp = document.getElementById('q-explanation');
+  exp.textContent = quiz[current].explain;
+  exp.classList.add('show');
+
+  document.getElementById('btn-submit').classList.add('hidden');
+  document.getElementById('btn-next').classList.remove('hidden');
+  document.getElementById('btn-next').textContent = current < quiz.length - 1 ? 'Next' : 'See Results';
+}
+
+function prevQuestion() {
+  if (current > 0) { current--; renderQuestion(); }
+}
+
+function nextQuestion() {
+  if (current < quiz.length - 1) { current++; renderQuestion(); }
+  else showResults();
+}
+
+function toggleFlag() {
+  const q = quiz[current];
+  const letters = 'ABCDE';
+  const ansIdxs = q.multi ? q.ans : [q.ans];
+  const correctAns = ansIdxs.map(i => `${letters[i]}) ${q.opts[i]}`).join('\n');
+  const allOpts = q.opts.map((o, i) => `${letters[i]}) ${o}`).join('\n');
+
+  const title = encodeURIComponent(`[Flag] D${q.domain} T${q.task}: ${q.q.substring(0, 60)}...`);
+  const body = encodeURIComponent(
+`## Flagged Question
+
+**Domain:** ${q.domain} — ${DOMAIN_NAMES[q.domain]}
+**Task:** ${q.task}
+
+### Question
+${q.q}
+
+### Options
+${allOpts}
+
+### Current Answer
+${correctAns}
+
+### Explanation
+${q.explain}
+
+---
+**What seems wrong?**
+<!-- Describe the issue: wrong answer, outdated info, unclear wording, etc. -->
+
+`);
+  window.open(`https://github.com/${GITHUB_REPO}/issues/new?title=${title}&body=${body}&labels=flagged-question`, '_blank');
+}
+
+function showResults() {
+  // Mark any unanswered questions as skipped
+  results.forEach((r, i) => {
+    if (r === null) {
+      results[i] = { q: quiz[i].q, correct: false, yourAnswer: 'Skipped', rightAnswer: (quiz[i].multi ? quiz[i].ans : [quiz[i].ans]).map(j => quiz[i].opts[j]).join(', '), explain: quiz[i].explain, _picks: [] };
+    }
+  });
+  score = results.filter(r => r.correct).length;
+  wrong = results.filter(r => !r.correct).length;
+
+  clearInterval(timerInterval);
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('progress-bar').style.width = '100%';
+
+  const pct = Math.round((score / quiz.length) * 100);
+  const pass = pct >= 70;
+  const m = String(Math.floor(seconds/60)).padStart(2,'0');
+  const s = String(seconds%60).padStart(2,'0');
+
+  // Domain breakdown
+  const domainScores = {};
+  quiz.forEach((q, i) => {
+    if (!domainScores[q.domain]) domainScores[q.domain] = { total: 0, correct: 0 };
+    domainScores[q.domain].total++;
+    if (results[i].correct) domainScores[q.domain].correct++;
+  });
+
+  let bdHtml = '';
+  for (const d in domainScores) {
+    const ds = domainScores[d];
+    const dp = Math.round((ds.correct / ds.total) * 100);
+    bdHtml += `<div class="bd-item"><div class="bd-domain">${DOMAIN_NAMES[d]}</div><div class="bd-score" style="color:${dp>=70?'#22c55e':'#ef4444'}">${ds.correct}/${ds.total} (${dp}%)</div></div>`;
+  }
+
+  // Review wrong answers
+  let reviewHtml = '';
+  results.forEach((r, i) => {
+    if (!r.correct) {
+      reviewHtml += `<div class="review-item">
+        <div class="ri-header"><span class="ri-status wrong">${r.yourAnswer === 'Skipped' ? 'SKIPPED' : 'WRONG'}</span></div>
+        <div class="ri-q">${i+1}. ${r.q}</div>
+        <div class="ri-answer">Your answer: ${r.yourAnswer}<br>Correct: ${r.rightAnswer}<br>${r.explain}</div>
+      </div>`;
+    }
+  });
+
+  const el = document.getElementById('results-screen');
+  el.innerHTML = `
+    <h2>${pass ? 'Congratulations!' : 'Keep Studying!'}</h2>
+    <p style="color:#889">${pass ? 'You passed the practice quiz!' : 'You need 70% to pass. Review the topics below.'}</p>
+    <div class="score-circle ${pass?'pass':'fail'}">
+      ${pct}%
+      <span class="pct-label">${score}/${quiz.length}</span>
+    </div>
+    <p style="color:#889;margin-bottom:8px">Time: ${m}:${s}</p>
+    <div class="breakdown">${bdHtml}</div>
+    ${reviewHtml ? '<h3 style="margin:20px 0 12px;text-align:left">Review incorrect answers</h3>' : '<p style="color:#22c55e;font-weight:600">Perfect score!</p>'}
+    <div class="review-list">${reviewHtml}</div>
+    <div class="actions" style="margin-top:30px">
+      <button class="btn btn-outline" onclick="retryWrong()">Retry Wrong Only</button>
+      <button class="btn" onclick="restart()">New Quiz</button>
+    </div>
+  `;
+  el.classList.remove('hidden');
+}
+
+function restart() {
+  document.getElementById('results-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+
+function retryWrong() {
+  const wrongQs = quiz.filter((q, i) => results[i] && !results[i].correct);
+  if (wrongQs.length === 0) { restart(); return; }
+  quiz = shuffle([...wrongQs]);
+  current = 0; score = 0; wrong = 0; results = new Array(quiz.length).fill(null); answered = false; seconds = 0;
+  document.getElementById('results-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  startTimer();
+  renderQuestion();
+}
+</script>
+</body>
+</html>

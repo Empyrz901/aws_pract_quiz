@@ -1,1 +1,1 @@
-# aws_pract_quiz
+# aws_pract_quiz.github.io

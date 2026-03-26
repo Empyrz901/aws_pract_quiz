@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:awslabs.github.io)",
+      "Bash(where uv:*)",
+      "Bash(where uvx:*)",
+      "Bash(where npx:*)",
+      "Bash(pip install:*)",
+      "Bash(pip3 install:*)",
+      "Bash(where python:*)",
+      "mcp__aws-docs__search_documentation",
+      "mcp__aws-docs__read_documentation"
+    ]
+  }
+}
