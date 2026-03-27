@@ -110,10 +110,10 @@ const DOMAIN4_QUESTIONS = [
     task: "4.1",
     q: "A company is transferring 500 GB of data per month from an EC2 instance in us-east-1 to an EC2 instance in eu-west-1. Which statement is correct?",
     opts: [
-      "This transfer is free because both instances are in AWS",
+      "This transfer is charged at the same rate as intra-region transfer",
       "This transfer incurs cross-region data transfer charges",
-      "Only the sending region is charged",
-      "This transfer is free if the instances are in the same VPC"
+      "Both regions share the transfer cost equally",
+      "This transfer is included in the EC2 instance hourly price"
     ],
     ans: 1,
     explain: "Data transfer between AWS Regions incurs cross-region data transfer charges regardless of the service or account used."
@@ -369,10 +369,10 @@ const DOMAIN4_QUESTIONS = [
     task: "4.1",
     q: "What is a key pricing benefit of using S3 Intelligent-Tiering?",
     opts: [
-      "It provides free storage for the first 50 TB",
+      "It uses lifecycle policies that require manual configuration for each object",
       "It automatically moves data between access tiers to optimize costs with no retrieval charges",
-      "It eliminates data transfer charges for all S3 operations",
-      "It provides the lowest storage cost for all data regardless of access patterns"
+      "It reduces cost by compressing objects before storing them",
+      "It stores all objects in S3 Glacier by default to minimize cost"
     ],
     ans: 1,
     explain: "S3 Intelligent-Tiering automatically moves objects between access tiers based on changing access patterns, optimizing costs without retrieval fees or operational overhead."
@@ -455,10 +455,10 @@ const DOMAIN4_QUESTIONS = [
     task: "4.2",
     q: "What is a benefit of consolidated billing in AWS Organizations?",
     opts: [
-      "Each account gets its own separate volume discounts",
+      "Each account receives a separate invoice with individual discounts",
       "Usage across all accounts is aggregated for potential volume pricing discounts",
-      "Consolidated billing eliminates all data transfer charges",
-      "It provides free AWS support for all member accounts"
+      "It applies Reserved Instance pricing to all member accounts automatically",
+      "It converts all On-Demand usage to Savings Plans pricing"
     ],
     ans: 1,
     explain: "Consolidated billing in AWS Organizations aggregates usage across all member accounts, which can qualify the organization for volume pricing discounts."
@@ -682,10 +682,10 @@ const DOMAIN4_QUESTIONS = [
     task: "4.2",
     q: "Which of the following is a benefit of using cost allocation tags?",
     opts: [
-      "They automatically reduce the cost of tagged resources",
+      "They enforce spending limits on tagged resources",
       "They enable you to categorize costs and generate reports broken down by business categories",
-      "They prevent unauthorized users from accessing resources",
-      "They automatically apply Reserved Instance discounts to tagged resources"
+      "They trigger CloudWatch alarms when tagged resource costs exceed thresholds",
+      "They allow you to share Reserved Instances only between tagged accounts"
     ],
     ans: 1,
     explain: "Cost allocation tags let you categorize and track AWS costs by custom categories (department, project, environment), enabling detailed cost breakdowns in billing reports."
@@ -1664,7 +1664,7 @@ const DOMAIN4_QUESTIONS = [
   { domain: 4, task: "4.1", q: "Which AWS pricing model charges you only for the compute time you actually use?", opts: ["Reserved Instances", "Dedicated Hosts", "Pay-as-you-go", "Savings Plans"], ans: 2, explain: "AWS pay-as-you-go pricing means you pay only for what you use, with no upfront commitment." },
   { domain: 4, task: "4.1", q: "What is the primary benefit of purchasing an EC2 Reserved Instance?", opts: ["Higher performance", "Automatic scaling", "Significant cost savings over On-Demand", "Free data transfer"], ans: 2, explain: "Reserved Instances offer up to 72% discount compared to On-Demand pricing in exchange for a 1- or 3-year commitment." },
   { domain: 4, task: "4.1", q: "Which EC2 purchasing option is best for workloads that can tolerate interruptions and need the lowest possible cost?", opts: ["On-Demand", "Reserved Instances", "Dedicated Hosts", "Spot Instances"], ans: 3, explain: "Spot Instances use spare AWS capacity at up to 90% discount but can be interrupted with 2-minute notice." },
-  { domain: 4, task: "4.1", q: "What does the AWS Free Tier offer for Amazon EC2?", opts: ["Unlimited free usage", "750 hours per month of t2.micro or t3.micro for 12 months", "Free usage for 3 years", "Free usage only in us-east-1"], ans: 1, explain: "The Free Tier provides 750 hours/month of t2.micro (or t3.micro) Linux/Windows instances for the first 12 months." },
+  { domain: 4, task: "4.1", q: "What does the AWS Free Tier offer for Amazon EC2?", opts: ["750 hours per month of t2.medium for 12 months", "750 hours per month of t2.micro or t3.micro for 12 months", "250 hours per month of any instance type for 12 months", "750 hours per month of t2.micro with no expiration"], ans: 1, explain: "The Free Tier provides 750 hours/month of t2.micro (or t3.micro) Linux/Windows instances for the first 12 months." },
   { domain: 4, task: "4.1", q: "Which AWS tool allows you to estimate the cost of AWS services before deploying them?", opts: ["AWS Cost Explorer", "AWS Budgets", "AWS Pricing Calculator", "AWS Trusted Advisor"], ans: 2, explain: "AWS Pricing Calculator lets you model and estimate costs for your planned AWS architecture." },
   { domain: 4, task: "4.1", q: "What is the term for the AWS pricing model where you commit to a consistent amount of compute usage (measured in $/hour) for 1 or 3 years?", opts: ["Reserved Instances", "Savings Plans", "Spot Instances", "Dedicated Instances"], ans: 1, explain: "Savings Plans offer flexible discounts (up to 66%) across EC2, Lambda, and Fargate based on an hourly spend commitment." },
   { domain: 4, task: "4.1", q: "Which of the following is a characteristic of On-Demand EC2 instances?", opts: ["Requires a 1-year contract", "No upfront cost or long-term commitment", "Cheapest option available", "Only available in certain regions"], ans: 1, explain: "On-Demand instances require no upfront payment or long-term commitment; you pay per second or hour used." },
@@ -1677,18 +1677,18 @@ const DOMAIN4_QUESTIONS = [
   { domain: 4, task: "4.1", q: "What happens to an EC2 Spot Instance when AWS needs the capacity back?", opts: ["It is paused and resumed later", "It is terminated with a 2-minute warning", "It is automatically converted to On-Demand", "It is migrated to another region"], ans: 1, explain: "AWS reclaims Spot Instances with a 2-minute interruption notice when capacity is needed elsewhere." },
   { domain: 4, task: "4.1", q: "Which AWS service provides a dedicated physical server for your exclusive use, helping meet compliance requirements?", opts: ["Dedicated Instances", "Dedicated Hosts", "Reserved Instances", "Bare Metal Instances"], ans: 1, explain: "Dedicated Hosts provide a physical server dedicated to your use, enabling compliance and license management." },
   { domain: 4, task: "4.1", q: "How does AWS charge for Amazon RDS?", opts: ["Only for storage used", "Based on the number of queries executed", "Based on instance hours, storage, I/O, and data transfer", "Flat monthly fee per database"], ans: 2, explain: "RDS pricing includes DB instance hours, storage provisioned, I/O requests, and data transfer charges." },
-  { domain: 4, task: "4.1", q: "Which of the following best describes the AWS Total Cost of Ownership (TCO) advantage over on-premises?", opts: ["AWS is always cheaper for every workload", "AWS eliminates upfront hardware capital expenses", "AWS has no operational costs", "AWS provides free support for all customers"], ans: 1, explain: "Moving to AWS replaces capital expenditure for hardware with operational expenditure, reducing TCO." },
+  { domain: 4, task: "4.1", q: "Which of the following best describes the AWS Total Cost of Ownership (TCO) advantage over on-premises?", opts: ["AWS reduces costs primarily through lower per-hour instance pricing", "AWS eliminates upfront hardware capital expenses", "AWS TCO savings come mainly from reduced data transfer fees", "AWS reduces costs by requiring fewer software licenses"], ans: 1, explain: "Moving to AWS replaces capital expenditure for hardware with operational expenditure, reducing TCO." },
   { domain: 4, task: "4.2", q: "Which AWS service gives you a centralized view of billing and usage across multiple AWS accounts?", opts: ["AWS Cost Explorer", "AWS Organizations", "AWS Budgets", "AWS Billing Console"], ans: 1, explain: "AWS Organizations consolidates billing across accounts, providing a single payer account for all member accounts." },
   { domain: 4, task: "4.2", q: "What is the benefit of consolidated billing in AWS Organizations?", opts: ["Free support for all accounts", "Volume discounts when combined usage crosses pricing tiers", "Automatic cost optimization", "Shared Reserved Instance capacity only"], ans: 1, explain: "Consolidated billing aggregates usage across accounts, potentially qualifying for volume pricing tier discounts." },
   { domain: 4, task: "4.2", q: "Which AWS tool allows you to set custom alerts when your AWS costs or usage exceed a defined threshold?", opts: ["AWS Cost Explorer", "AWS Pricing Calculator", "AWS Budgets", "AWS Trusted Advisor"], ans: 2, explain: "AWS Budgets lets you set cost, usage, and reservation budgets with alerts when thresholds are breached." },
   { domain: 4, task: "4.2", q: "What does AWS Cost Explorer primarily help you do?", opts: ["Predict future instance types needed", "Visualize and analyze your AWS spending over time", "Set billing alerts", "Compare AWS to competitor pricing"], ans: 1, explain: "AWS Cost Explorer provides interactive charts and reports to analyze historical and forecasted AWS costs." },
   { domain: 4, task: "4.2", q: "Which AWS feature lets you allocate costs to different teams or projects using metadata attached to resources?", opts: ["Cost Allocation Tags", "AWS Organizations SCPs", "AWS Budgets", "Resource Groups"], ans: 0, explain: "Cost Allocation Tags let you tag resources (e.g., by team or project) and then filter costs by those tags." },
-  { domain: 4, task: "4.2", q: "What is an AWS Free Tier 'Always Free' offer?", opts: ["Services free for 12 months after signup", "Trial offers lasting 30-60 days", "Services with a limited free amount every month with no expiration", "Services free only for students"], ans: 2, explain: "Always Free offers never expire and are available to all AWS customers, such as 1 million Lambda requests/month." },
+  { domain: 4, task: "4.2", q: "What is an AWS Free Tier 'Always Free' offer?", opts: ["Services free for 12 months after signup", "Trial offers lasting 30-60 days", "Services with a limited free amount every month with no expiration", "Services free for the first 1,000 API calls per account"], ans: 2, explain: "Always Free offers never expire and are available to all AWS customers, such as 1 million Lambda requests/month." },
   { domain: 4, task: "4.2", q: "Which report in AWS provides the most detailed breakdown of your charges, including every line-item resource?", opts: ["AWS Cost Explorer report", "AWS Budgets report", "AWS Cost and Usage Report (CUR)", "AWS Trusted Advisor report"], ans: 2, explain: "The AWS Cost and Usage Report (CUR) is the most granular billing dataset, with hourly line-item resource detail." },
   { domain: 4, task: "4.2", q: "What is the purpose of an AWS invoice?", opts: ["To estimate future costs", "To provide a summary of charges billed to your account for the month", "To show Reserved Instance recommendations", "To list security findings"], ans: 1, explain: "The monthly AWS invoice summarizes all charges incurred during the billing period for your account." },
   { domain: 4, task: "4.2", q: "Which AWS tool provides rightsizing recommendations to help reduce EC2 costs?", opts: ["AWS Budgets", "AWS Trusted Advisor", "AWS Cost Explorer", "AWS Config"], ans: 2, explain: "AWS Cost Explorer includes rightsizing recommendations that identify underutilized EC2 instances to downsize." },
   { domain: 4, task: "4.2", q: "In AWS Organizations, what is the account that pays the bills for all member accounts called?", opts: ["Root account", "Management account (payer account)", "Master billing account", "Primary account"], ans: 1, explain: "The management account (formerly called payer account) receives the consolidated bill for all member accounts." },
-  { domain: 4, task: "4.2", q: "Which of the following is a key feature of AWS Budgets Actions?", opts: ["Automatically terminate all instances when budget is exceeded", "Apply IAM policies or stop instances when budget thresholds are met", "Send emails only when costs reach 100% of budget", "Create Reserved Instances automatically"], ans: 1, explain: "Budgets Actions can automatically apply IAM policies, SCPs, or target EC2/RDS instances when thresholds are hit." },
+  { domain: 4, task: "4.2", q: "Which of the following is a key feature of AWS Budgets Actions?", opts: ["Send SNS notifications but cannot take automated actions on resources", "Apply IAM policies or stop instances when budget thresholds are met", "Only trigger alerts after costs have already exceeded the budget", "Reduce instance sizes automatically to stay within budget"], ans: 1, explain: "Budgets Actions can automatically apply IAM policies, SCPs, or target EC2/RDS instances when thresholds are hit." },
   { domain: 4, task: "4.2", q: "What is the AWS Billing Dashboard primarily used for?", opts: ["Configuring IAM permissions for billing", "Viewing current month charges and accessing billing tools", "Purchasing Reserved Instances", "Setting up VPC networking"], ans: 1, explain: "The Billing Dashboard provides an overview of current costs, forecasts, and access to billing tools." },
   { domain: 4, task: "4.2", q: "How can you receive an alert when your AWS Free Tier usage is approaching its limits?", opts: ["Set up CloudWatch alarms manually", "Enable Free Tier usage alerts in the Billing Console", "Subscribe to AWS Health notifications", "Configure AWS Config rules"], ans: 1, explain: "The Billing Console has a Free Tier usage alert setting that emails you when you approach Free Tier limits." },
   { domain: 4, task: "4.2", q: "Which AWS pricing concept means you benefit from lower per-unit prices as your usage volume increases?", opts: ["Pay-as-you-go", "Volume-based discounts (tiered pricing)", "Savings Plans", "Reserved pricing"], ans: 1, explain: "AWS uses tiered pricing for services like S3, where per-GB cost decreases as total storage volume increases." },
