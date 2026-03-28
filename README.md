@@ -8,11 +8,11 @@ A free, open-source interactive practice quiz for the **AWS Certified Cloud Prac
 
 ## Overview
 
-This is a static, single-page web application with **1,554 practice questions** covering all four CLF-C02 exam domains. No backend, no login, no tracking — just open it and start practicing.
+This is a static, single-page web application with **2,154 practice questions** covering all four CLF-C02 exam domains. No backend, no login, no tracking — just open it and start practicing.
 
 ## Features
 
-- **1,554 questions** across all 4 exam domains
+- **2,154 questions** across all 4 exam domains
 - **Single-answer and multi-answer** question types (Select TWO / Select THREE)
 - **Scenario-based questions** with business context — not just "What is X?" trivia
 - **Weighted exam mode** — selecting 65 questions draws proportionally by official domain weights
@@ -32,11 +32,11 @@ The CLF-C02 exam has 65 scored questions with a 70% passing score. Domain weight
 
 | Domain | Name | Weight | Questions in Bank |
 |--------|------|--------|-------------------|
-| 1 | Cloud Concepts | 24% | 329 |
+| 1 | Cloud Concepts | 24% | 529 |
 | 2 | Security & Compliance | 30% | 588 |
-| 3 | Cloud Technology & Services | 34% | 408 |
-| 4 | Billing, Pricing & Support | 12% | 229 |
-| | **Total** | **100%** | **1,554** |
+| 3 | Cloud Technology & Services | 34% | 608 |
+| 4 | Billing, Pricing & Support | 12% | 429 |
+| | **Total** | **100%** | **2,154** |
 
 When you select "65 (exam length)" with "All Domains", the quiz uses a **weighted random draw** matching the official exam distribution (~16 from D1, ~20 from D2, ~22 from D3, ~8 from D4).
 
@@ -45,9 +45,13 @@ When you select "65 (exam length)" with "All Domains", the quiz uses a **weighte
 ```
 ├── index.html          # Main application (HTML + CSS + JS, single file)
 ├── domain1.js          # Domain 1 questions — Cloud Concepts
+├── domain1_distractor_200.js  # Added advanced Domain 1 scenario bank
 ├── domain2.js          # Domain 2 questions — Security & Compliance
+├── domain2_distractor_200.js  # Added advanced Domain 2 scenario bank
 ├── domain3.js          # Domain 3 questions — Cloud Technology & Services
+├── domain3_distractor_200.js  # Added advanced Domain 3 scenario bank
 ├── domain4.js          # Domain 4 questions — Billing, Pricing & Support
+├── domain4_distractor_200.js  # Added advanced Domain 4 scenario bank
 ├── README.md           # This file
 └── AWS_Cloud_Practitioner_CLF-C02_Questions.md  # Reference question source
 ```
@@ -127,4 +131,5 @@ Found an error in a question? Use the **Report error** button during the quiz, o
 ## License
 
 This project is for educational purposes. AWS service names and trademarks belong to Amazon Web Services, Inc.
+
 
