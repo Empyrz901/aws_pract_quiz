@@ -18,17 +18,17 @@ This is a static, single-page web application with **2,154 practice questions** 
 - **Weighted exam mode** — selecting 65 questions draws proportionally by official domain weights
 - **Shuffle toggle** — randomize question order or go sequentially
 - **Domain filtering** — practice a specific domain or all at once
-- **Question count options** — 10, 20, 30, 50, 65 (exam length), 100, or all
+- **Question count options** — 10, 20, 30, 50, 65 (official length), 100, or all
 - **Timer** — tracks how long you spend on each quiz session
 - **Previous / Next navigation** — move freely between questions, revisit answered ones
 - **Detailed explanations** — every question explains why the correct answer is right and why distractors are wrong
-- **Results breakdown** — per-domain scoring with pass/fail indicator (70% threshold)
+- **Results breakdown** — per-domain scoring and performance review
 - **Retry wrong only** — re-quiz just the questions you got wrong
 - **Report error button** — flags a question by opening a pre-filled GitHub Issue
 
 ## Exam Domain Breakdown
 
-The CLF-C02 exam has 65 scored questions with a 70% passing score. Domain weights determine how many questions come from each area:
+The CLF-C02 exam includes 65 total questions (50 scored and 15 unscored) and uses scaled scoring from 100 to 1000, with a passing score of 700. Domain weights determine how many scored questions come from each area:
 
 | Domain | Name | Weight | Questions in Bank |
 |--------|------|--------|-------------------|
@@ -38,7 +38,7 @@ The CLF-C02 exam has 65 scored questions with a 70% passing score. Domain weight
 | 4 | Billing, Pricing & Support | 12% | 429 |
 | | **Total** | **100%** | **2,154** |
 
-When you select "65 (exam length)" with "All Domains", the quiz uses a **weighted random draw** matching the official exam distribution (~16 from D1, ~20 from D2, ~22 from D3, ~8 from D4).
+When you select "65 (official length)" with "All Domains", the quiz uses a **weighted random draw** aligned to official domain weights (~16 from D1, ~20 from D2, ~22 from D3, ~8 from D4) for practice.
 
 ## Project Structure
 
