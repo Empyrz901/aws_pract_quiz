@@ -210,7 +210,7 @@
 <script src="domain4.js"></script>
 <script src="domain4_distractor_200.js"></script>
 <script>
-const ALL_QUESTIONS = [
+const RAW_QUESTIONS = [
   ...DOMAIN1_QUESTIONS,
   ...DOMAIN1_DISTRACTOR_QUESTIONS,
   ...DOMAIN2_QUESTIONS,
@@ -220,6 +220,89 @@ const ALL_QUESTIONS = [
   ...DOMAIN4_QUESTIONS,
   ...DOMAIN4_DISTRACTOR_QUESTIONS
 ];
+
+function normalizeQuestionText(text) {
+  return (text || '').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+function auditDefinitionLike(text) {
+  const t = (text || '').toLowerCase();
+  return t.includes('what is ') ||
+         t.includes('which of the following is the definition') ||
+         t.includes('best describes');
+}
+
+function auditScenarioLike(text) {
+  return /\b(a|an)\s+(startup|company|firm|enterprise|team|organization|platform|provider|agency|bank|retailer)\b/i.test(text || '');
+}
+
+function auditConstraintLike(text) {
+  const t = (text || '').toLowerCase();
+  return t.includes('constraint:') ||
+         t.includes('lowest operational overhead') ||
+         t.includes('most cost-effective') ||
+         t.includes('maximum availability') ||
+         t.includes('lowest latency') ||
+         t.includes('least maintenance');
+}
+
+function auditAndFilterQuestions(questions) {
+  const seen = new Set();
+  const cleaned = [];
+  const flagged = [];
+  const report = {
+    total: questions.length,
+    kept: 0,
+    removed: 0,
+    reasons: {
+      invalid_shape: 0,
+      invalid_answer_index: 0,
+      duplicate_question_text: 0,
+      definition_like: 0,
+      non_scenario_non_constraint: 0,
+      too_short: 0
+    }
+  };
+
+  questions.forEach((q) => {
+    const reasons = [];
+    if (!q || !q.q || !Array.isArray(q.opts) || q.opts.length < 4 || q.explain === undefined) {
+      reasons.push('invalid_shape');
+    }
+
+    const text = q && q.q ? q.q : '';
+    const norm = normalizeQuestionText(text);
+
+    if (seen.has(norm)) reasons.push('duplicate_question_text');
+    else if (norm) seen.add(norm);
+
+    if (text.length < 60) reasons.push('too_short');
+    if (auditDefinitionLike(text)) reasons.push('definition_like');
+    if (!auditScenarioLike(text) && !auditConstraintLike(text)) reasons.push('non_scenario_non_constraint');
+
+    if (q && q.multi === true) {
+      const ansArrayValid = Array.isArray(q.ans) && q.ans.length >= 2 && q.ans.every((i) => Number.isInteger(i) && i >= 0 && i < q.opts.length);
+      if (!ansArrayValid) reasons.push('invalid_answer_index');
+    } else if (!q || !Number.isInteger(q.ans) || q.ans < 0 || (q.opts && q.ans >= q.opts.length)) {
+      reasons.push('invalid_answer_index');
+    }
+
+    if (reasons.length > 0) {
+      reasons.forEach((r) => { report.reasons[r] = (report.reasons[r] || 0) + 1; });
+      flagged.push({ question: text, reasons: reasons });
+      return;
+    }
+
+    cleaned.push(q);
+  });
+
+  report.kept = cleaned.length;
+  report.removed = report.total - report.kept;
+  return { cleaned, flagged, report };
+}
+
+const QUESTION_AUDIT = auditAndFilterQuestions(RAW_QUESTIONS);
+const ALL_QUESTIONS = QUESTION_AUDIT.cleaned;
 
 const DOMAIN_NAMES = {
   1: "Domain 1: Cloud Concepts",
@@ -235,7 +318,8 @@ let selectedDomain = "all";
 const GITHUB_REPO = 'Empyrz901/aws_pract_quiz';
 const EXAM_WEIGHTS = { 1: 0.24, 2: 0.30, 3: 0.34, 4: 0.12 };
 
-document.getElementById('all-count').textContent = ALL_QUESTIONS.length + ' Q';
+document.getElementById('all-count').textContent = `${ALL_QUESTIONS.length} Q`;
+console.log('Question audit report:', QUESTION_AUDIT.report);
 
 function selectDomain(btn) {
   document.querySelectorAll('.domain-btn').forEach(b => b.classList.remove('selected'));
