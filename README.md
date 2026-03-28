@@ -23,6 +23,7 @@ This is a static, single-page web application with **2,154 practice questions** 
 - **Previous / Next navigation** — move freely between questions, revisit answered ones
 - **Detailed explanations** — every question explains why the correct answer is right and why distractors are wrong
 - **Results breakdown** — per-domain scoring and performance review
+- **Official simulation scoring mode** — selecting 65 questions in All Domains uses weighted hard-question sampling and reports results on 50 scored questions (15 unscored)
 - **Retry wrong only** — re-quiz just the questions you got wrong
 - **Report error button** — flags a question by opening a pre-filled GitHub Issue
 
@@ -38,7 +39,7 @@ The CLF-C02 exam includes 65 total questions (50 scored and 15 unscored) and use
 | 4 | Billing, Pricing & Support | 12% | 429 |
 | | **Total** | **100%** | **2,154** |
 
-When you select "65 (official length)" with "All Domains", the quiz uses a **weighted random draw** aligned to official domain weights (~16 from D1, ~20 from D2, ~22 from D3, ~8 from D4) for practice.
+When you select "65 (official length)" with "All Domains", the quiz uses a **weighted random draw** aligned to official domain weights (~16 from D1, ~20 from D2, ~22 from D3, ~8 from D4) and prioritizes scenario-based, constraint-driven questions for a tougher simulation set.
 
 ## Project Structure
 
@@ -109,6 +110,20 @@ Each question has a "Report error" button that opens a GitHub Issue pre-filled w
 - **Pure HTML/CSS/JavaScript** — no frameworks, no build step, no dependencies
 - **GitHub Pages** — hosted as a static site, served directly from the `main` branch
 - **No localStorage** — each quiz session is independent (no persistence between page loads)
+
+## Question Quality Checks
+
+Run the quality audit script from the repository root:
+
+```bash
+node scripts/question_quality_report.js
+```
+
+For threshold enforcement:
+
+```bash
+node scripts/question_quality_report.js --strict
+```
 
 ## CLF-C02 Exam Topics Covered
 

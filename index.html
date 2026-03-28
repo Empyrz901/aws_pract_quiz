@@ -229,6 +229,8 @@ const DOMAIN_NAMES = {
 };
 
 let quiz = [], current = 0, score = 0, wrong = 0, answered = false, results = [], timerInterval, seconds = 0;
+let officialSimulation = false;
+let scoredQuestionIndices = new Set();
 let selectedDomain = "all";
 const GITHUB_REPO = 'Empyrz901/aws_pract_quiz';
 const EXAM_WEIGHTS = { 1: 0.24, 2: 0.30, 3: 0.34, 4: 0.12 };
@@ -263,6 +265,32 @@ function weightedDraw(pool, count) {
   return shuffle(picked).slice(0, count);
 }
 
+function isDefinitionLikeQuestion(text) {
+  const t = (text || '').toLowerCase();
+  return t.includes('what is ') ||
+         t.includes('which of the following is the definition') ||
+         t.includes('best describes');
+}
+
+function isScenarioQuestion(text) {
+  return /\b(a|an)\s+(startup|company|firm|enterprise|team|organization|platform|provider|agency|bank|retailer)\b/i.test(text || '');
+}
+
+function isConstraintDriven(text) {
+  const t = (text || '').toLowerCase();
+  return t.includes('constraint:') ||
+         t.includes('lowest operational overhead') ||
+         t.includes('most cost-effective') ||
+         t.includes('maximum availability') ||
+         t.includes('lowest latency') ||
+         t.includes('least maintenance');
+}
+
+function isHardExamStyle(q) {
+  if (!q || !q.q || !q.opts || q.opts.length < 4) return false;
+  return !isDefinitionLikeQuestion(q.q) && (isConstraintDriven(q.q) || isScenarioQuestion(q.q));
+}
+
 function startQuiz() {
   const doShuffle = document.getElementById('shuffle-toggle').checked;
   let pool = selectedDomain === "all" ? [...ALL_QUESTIONS] : ALL_QUESTIONS.filter(q => q.domain == selectedDomain);
@@ -270,11 +298,20 @@ function startQuiz() {
   let count = parseInt(document.getElementById('q-count').value);
   if (count === 0 || count > pool.length) count = pool.length;
 
-  // Use weighted draw for exam-length when all domains selected
+  officialSimulation = false;
+  scoredQuestionIndices = new Set();
+
+  // Use weighted draw for official-length when all domains selected
   if (count === 65 && selectedDomain === "all") {
-    quiz = weightedDraw(pool, 65);
+    officialSimulation = true;
+    const hardPool = pool.filter(isHardExamStyle);
+    const sourcePool = hardPool.length >= 65 ? hardPool : pool;
+    quiz = weightedDraw(sourcePool, 65);
+    const idxs = shuffle(Array.from({ length: 65 }, (_, i) => i));
+    scoredQuestionIndices = new Set(idxs.slice(15)); // 50 scored, 15 unscored
   } else {
     quiz = pool.slice(0, count);
+    scoredQuestionIndices = new Set(Array.from({ length: quiz.length }, (_, i) => i));
   }
   current = 0; score = 0; wrong = 0; results = new Array(quiz.length).fill(null); answered = false; seconds = 0;
 
@@ -307,7 +344,10 @@ function renderQuestion() {
   document.getElementById('s-wrong').textContent = wrong;
   document.getElementById('progress-bar').style.width = `${((current)/quiz.length)*100}%`;
   document.getElementById('q-domain').textContent = DOMAIN_NAMES[q.domain] + ` \u2022 Task ${q.task}`;
-  document.getElementById('q-number').textContent = `Question ${current+1} of ${quiz.length}`;
+  const scoredHint = officialSimulation
+    ? ` \u2022 ${scoredQuestionIndices.has(current) ? 'Scored' : 'Unscored'}`
+    : '';
+  document.getElementById('q-number').textContent = `Question ${current+1} of ${quiz.length}${scoredHint}`;
   document.getElementById('q-text').textContent = q.q;
 
   const isMulti = q.multi;
@@ -376,14 +416,15 @@ function selectOption(idx) {
       const i = parseInt(el.dataset.idx);
       if (correctIndices.includes(i)) el.classList.add('correct');
     });
+    const counted = scoredQuestionIndices.has(current);
     if (!isCorrect) {
       optEls[idx].classList.add('wrong');
-      wrong++;
+      if (counted) wrong++;
     } else {
-      score++;
+      if (counted) score++;
     }
 
-    results[current] = { q: q.q, correct: isCorrect, yourAnswer: q.opts[idx], rightAnswer: correctIndices.map(i => q.opts[i]).join(', '), explain: q.explain, _picks: [idx] };
+    results[current] = { q: q.q, correct: isCorrect, yourAnswer: q.opts[idx], rightAnswer: correctIndices.map(i => q.opts[i]).join(', '), explain: q.explain, _picks: [idx], _counted: counted };
     showPostAnswer();
     return;
   }
@@ -432,9 +473,14 @@ function submitMulti() {
     if (multiSelections.includes(i) && !correctIndices.includes(i)) el.classList.add('wrong');
   });
 
-  if (!isCorrect) { wrong++; } else { score++; }
+  const counted = scoredQuestionIndices.has(current);
+  if (!isCorrect) {
+    if (counted) wrong++;
+  } else {
+    if (counted) score++;
+  }
 
-  results[current] = { q: q.q, correct: isCorrect, yourAnswer: multiSelections.map(i => q.opts[i]).join(', '), rightAnswer: correctIndices.map(i => q.opts[i]).join(', '), explain: q.explain, _picks: [...multiSelections] };
+  results[current] = { q: q.q, correct: isCorrect, yourAnswer: multiSelections.map(i => q.opts[i]).join(', '), rightAnswer: correctIndices.map(i => q.opts[i]).join(', '), explain: q.explain, _picks: [...multiSelections], _counted: counted };
   showPostAnswer();
 }
 
@@ -501,20 +547,23 @@ function showResults() {
       results[i] = { q: quiz[i].q, correct: false, yourAnswer: 'Skipped', rightAnswer: (quiz[i].multi ? quiz[i].ans : [quiz[i].ans]).map(j => quiz[i].opts[j]).join(', '), explain: quiz[i].explain, _picks: [] };
     }
   });
-  score = results.filter(r => r.correct).length;
-  wrong = results.filter(r => !r.correct).length;
+  const isCounted = (i) => scoredQuestionIndices.has(i);
+  score = results.filter((r, i) => r.correct && isCounted(i)).length;
+  wrong = results.filter((r, i) => !r.correct && isCounted(i)).length;
 
   clearInterval(timerInterval);
   document.getElementById('quiz-screen').classList.add('hidden');
   document.getElementById('progress-bar').style.width = '100%';
 
-  const pct = Math.round((score / quiz.length) * 100);
+  const scoredTotal = officialSimulation ? 50 : quiz.length;
+  const pct = Math.round((score / scoredTotal) * 100);
   const m = String(Math.floor(seconds/60)).padStart(2,'0');
   const s = String(seconds%60).padStart(2,'0');
 
   // Domain breakdown
   const domainScores = {};
   quiz.forEach((q, i) => {
+    if (!isCounted(i)) return;
     if (!domainScores[q.domain]) domainScores[q.domain] = { total: 0, correct: 0 };
     domainScores[q.domain].total++;
     if (results[i].correct) domainScores[q.domain].correct++;
@@ -531,7 +580,7 @@ function showResults() {
   // Review wrong answers
   let reviewHtml = '';
   results.forEach((r, i) => {
-    if (!r.correct) {
+    if (!r.correct && isCounted(i)) {
       reviewHtml += `<div class="review-item">
         <div class="ri-header"><span class="ri-status wrong">${r.yourAnswer === 'Skipped' ? 'SKIPPED' : 'WRONG'}</span></div>
         <div class="ri-q">${i+1}. ${r.q}</div>
@@ -541,12 +590,15 @@ function showResults() {
   });
 
   const el = document.getElementById('results-screen');
+  const summaryLine = officialSimulation
+    ? 'Official simulation mode: 65 total questions (50 scored + 15 unscored). Percent shown is based on scored questions only.'
+    : 'Official CLF-C02 scoring is scaled (100-1000, passing score 700). This practice quiz reports percent correct.';
   el.innerHTML = `
     <h2>Practice Results</h2>
-    <p style="color:#889">Official CLF-C02 scoring is scaled (100-1000, passing score 700). This practice quiz reports percent correct.</p>
+    <p style="color:#889">${summaryLine}</p>
     <div class="score-circle score">
       ${pct}%
-      <span class="pct-label">${score}/${quiz.length}</span>
+      <span class="pct-label">${score}/${scoredTotal}</span>
     </div>
     <p style="color:#889;margin-bottom:8px">Time: ${m}:${s}</p>
     <div class="breakdown">${bdHtml}</div>
@@ -570,6 +622,8 @@ function retryWrong() {
   const wrongQs = quiz.filter((q, i) => results[i] && !results[i].correct);
   if (wrongQs.length === 0) { restart(); return; }
   quiz = shuffle([...wrongQs]);
+  officialSimulation = false;
+  scoredQuestionIndices = new Set(Array.from({ length: quiz.length }, (_, i) => i));
   current = 0; score = 0; wrong = 0; results = new Array(quiz.length).fill(null); answered = false; seconds = 0;
   document.getElementById('results-screen').classList.add('hidden');
   document.getElementById('quiz-screen').classList.remove('hidden');
