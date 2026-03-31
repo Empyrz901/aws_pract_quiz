@@ -64,6 +64,27 @@ function generateDomain1DistractorQuestions() {
     return opts.map((_, i) => opts[(i + s) % len]);
   }
 
+  function buildPrompt(baseQuestion, constraint, variant) {
+    const clean = baseQuestion.trim();
+    const styles = [
+      `A company is facing this decision: ${clean} The team is optimizing for ${constraint}.`,
+      `A company is working through this scenario: ${clean} The strongest priority is ${constraint}.`,
+      `A company needs guidance on the following: ${clean} They want the choice that best supports ${constraint}.`,
+      `A company is evaluating this option set: ${clean} The deciding factor is ${constraint}.`
+    ];
+    return styles[variant % styles.length];
+  }
+
+  function buildExplanation(correct, win, nextBest, lose, variant) {
+    const styles = [
+      `${win} ${nextBest} is a plausible alternative, but ${lose.charAt(0).toLowerCase()}${lose.slice(1)}`,
+      `${correct} is the best answer here. ${win} ${nextBest} may seem close, but ${lose.charAt(0).toLowerCase()}${lose.slice(1)}`,
+      `${win} ${lose} That is why ${correct} is the better fit.`,
+      `${correct} fits the requirement best. ${win} By comparison, ${nextBest} falls short because ${lose.charAt(0).toLowerCase()}${lose.slice(1)}`
+    ];
+    return styles[variant % styles.length];
+  }
+
   const out = [];
   let idx = 0;
   templates.forEach((t) => {
@@ -74,10 +95,10 @@ function generateDomain1DistractorQuestions() {
       out.push({
         domain: 1,
         task: t.task,
-        q: `${t.q(c, k)} (Constraint: ${k}.)`,
+        q: buildPrompt(t.q(c, k), k, i + idx),
         opts: opts,
         ans: opts.indexOf(t.ans),
-        explain: `Correct answer: ${t.ans}. ${t.win} Next best distractor: ${t.next}. ${t.lose}`
+        explain: buildExplanation(t.ans, t.win, t.next, t.lose, i + idx)
       });
       idx++;
     }

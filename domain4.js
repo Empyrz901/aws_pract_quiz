@@ -29,7 +29,7 @@ const DOMAIN4_QUESTIONS = [
     task: "4.1",
     q: "What is the key difference between Standard Reserved Instances and Convertible Reserved Instances?",
     opts: [
-      "Standard RIs cost more than Convertible RIs",
+      "Standard RIs usually provide a larger discount but less flexibility",
       "Convertible RIs allow you to change the instance family, OS, and tenancy during the term",
       "Standard RIs cannot be shared across accounts in AWS Organizations",
       "Convertible RIs are only available for 3-year terms"
@@ -204,7 +204,7 @@ const DOMAIN4_QUESTIONS = [
     task: "4.1",
     q: "Which of the following statements about EBS pricing is correct?",
     opts: [
-      "EBS volumes are free as long as they are attached to an EC2 instance",
+      "EBS volumes are billed based on how often the data is read",
       "EBS pricing is based on the provisioned volume size (GB per month) and volume type",
       "EBS snapshots are always free",
       "EBS volumes are charged only when data is read or written"
@@ -231,7 +231,7 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.1",
-    q: "Data transfer between EC2 instances in the same Availability Zone using private IP addresses is:",
+    q: "What is true about data transfer between EC2 instances in the same Availability Zone using private IP addresses?",
     opts: ["Charged at the standard data transfer rate", "Free", "Charged at half the cross-region rate", "Charged only for outbound traffic"],
     ans: 1,
     explain: "Data transfer between EC2 instances in the same Availability Zone using private IPv4 or IPv6 addresses is free."
@@ -286,7 +286,7 @@ const DOMAIN4_QUESTIONS = [
       "Savings Plans require choosing a specific instance type upfront",
       "Savings Plans are available for 1-year or 3-year terms",
       "Savings Plans can only be applied to EC2 instances",
-      "Savings Plans do not offer any discount compared to On-Demand"
+      "Savings Plans apply automatically to all AWS services"
     ],
     ans: 1,
     explain: "Savings Plans are available in 1-year or 3-year terms. You commit to a consistent amount of usage (measured in $/hour) in exchange for discounted pricing."
@@ -307,7 +307,7 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.1",
-    q: "A company's workload requires guaranteed capacity in a specific Availability Zone for a planned product launch, but they do not want a 1-year commitment. What should they use?",
+    q: "A company needs reserved EC2 capacity in a specific Availability Zone for a planned launch, but it does not want a term commitment. What should it use?",
     opts: ["Spot Instances", "On-Demand Capacity Reservations", "Reserved Instances", "Dedicated Instances"],
     ans: 1,
     explain: "On-Demand Capacity Reservations guarantee compute capacity in a specific AZ without any term commitment, ensuring instances can be launched when needed."
@@ -321,7 +321,7 @@ const DOMAIN4_QUESTIONS = [
       "All data transfer within a single Availability Zone is charged",
       "Data transfer from the internet into AWS is charged per GB",
       "Data transfer out to the internet from AWS incurs per-GB charges",
-      "Data transfer between all AWS services in the same region is free"
+      "Data transfer from the internet into AWS is free only for S3 uploads"
     ],
     ans: [0, 3],
     multi: true,
@@ -351,7 +351,7 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.1",
-    q: "A company has steady-state EC2 usage but wants the ability to change instance types within the same family during the term. Which Reserved Instance type should they choose?",
+    q: "A company has steady-state EC2 usage but wants the ability to move between instance sizes in the same family during the term. Which Reserved Instance type should it choose?",
     opts: ["Standard Reserved Instance with size flexibility", "Convertible Reserved Instance", "Scheduled Reserved Instance", "Zonal Reserved Instance"],
     ans: 0,
     explain: "Standard Reserved Instances offer size flexibility within the same instance family in the same region, allowing you to benefit from the RI discount even if you change instance sizes."
@@ -372,7 +372,7 @@ const DOMAIN4_QUESTIONS = [
       "It uses lifecycle policies that require manual configuration for each object",
       "It automatically moves data between access tiers to optimize costs with no retrieval charges",
       "It reduces cost by compressing objects before storing them",
-      "It stores all objects in S3 Glacier by default to minimize cost"
+      "It requires manual tier changes for each object"
     ],
     ans: 1,
     explain: "S3 Intelligent-Tiering automatically moves objects between access tiers based on changing access patterns, optimizing costs without retrieval fees or operational overhead."
@@ -518,7 +518,7 @@ const DOMAIN4_QUESTIONS = [
     task: "4.2",
     q: "What do Service Control Policies (SCPs) in AWS Organizations allow you to do?",
     opts: [
-      "Set maximum spending limits for member accounts",
+      "Set cost alerts and budgets for member accounts",
       "Control which AWS services and actions are allowed or denied for member accounts",
       "Automatically tag resources in all member accounts",
       "Share Reserved Instances across member accounts"
