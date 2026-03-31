@@ -9,7 +9,12 @@ function generateDomain2DistractorQuestions() {
     "A logistics enterprise",
     "A media streaming provider",
     "A digital banking platform",
-    "An insurance technology company"
+    "An insurance technology company",
+    "A multinational manufacturer",
+    "An education services provider",
+    "A telecommunications company",
+    "A travel technology platform",
+    "A pharmaceutical research firm"
   ];
 
   const constraints = [
@@ -22,7 +27,12 @@ function generateDomain2DistractorQuestions() {
     "least ongoing administration",
     "quickest implementation time",
     "lowest risk of credential exposure",
-    "most scalable multi-account governance"
+    "most scalable multi-account governance",
+    "strongest audit evidence trail",
+    "lowest blast radius",
+    "simplest key governance model",
+    "fastest incident investigation",
+    "least privilege at scale"
   ];
 
   const templates = [
@@ -318,7 +328,7 @@ function generateDomain2DistractorQuestions() {
   let id = 0;
 
   templates.forEach((template) => {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 15; i++) {
       const company = companies[i % companies.length];
       const constraint = constraints[(i + id) % constraints.length];
       const prompt = template.buildQuestion(company, constraint);

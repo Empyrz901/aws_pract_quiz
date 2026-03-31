@@ -9,7 +9,12 @@ function generateDomain4DistractorQuestions() {
     "A public sector department",
     "A media business",
     "A manufacturing enterprise",
-    "A gaming company"
+    "A gaming company",
+    "A biotechnology startup",
+    "A global insurance provider",
+    "A telecommunications business",
+    "An online education company",
+    "An energy services firm"
   ];
 
   const constraints = [
@@ -22,7 +27,12 @@ function generateDomain4DistractorQuestions() {
     "strongest multi-account cost controls",
     "most predictable monthly spend",
     "lowest risk of budget overrun",
-    "fastest root-cause analysis for charges"
+    "fastest root-cause analysis for charges",
+    "highest chargeback clarity",
+    "least commitment risk",
+    "best long-term discount coverage",
+    "simplest executive reporting",
+    "lowest anomaly detection lag"
   ];
 
   const templates = [
@@ -57,7 +67,7 @@ function generateDomain4DistractorQuestions() {
   const out = [];
   let idx = 0;
   templates.forEach((t) => {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 15; i++) {
       const c = companies[i % companies.length];
       const k = constraints[(i + idx) % constraints.length];
       const opts = rotate(t.opts, i);

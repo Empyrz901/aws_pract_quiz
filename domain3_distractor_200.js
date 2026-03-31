@@ -9,7 +9,12 @@ function generateDomain3DistractorQuestions() {
     "A public sector portal",
     "An IoT platform vendor",
     "A SaaS collaboration company",
-    "A travel booking platform"
+    "A travel booking platform",
+    "A biotechnology company",
+    "A telecom operations provider",
+    "A manufacturing software vendor",
+    "An online education platform",
+    "An energy analytics company"
   ];
 
   const constraints = [
@@ -22,7 +27,12 @@ function generateDomain3DistractorQuestions() {
     "minimum infrastructure management",
     "best performance at variable scale",
     "least maintenance effort",
-    "highest fault tolerance"
+    "highest fault tolerance",
+    "lowest recovery time objective",
+    "best developer productivity",
+    "strongest managed-service alignment",
+    "simplest multi-environment rollout",
+    "lowest network complexity"
   ];
 
   const templates = [
@@ -57,7 +67,7 @@ function generateDomain3DistractorQuestions() {
   const out = [];
   let idx = 0;
   templates.forEach((t) => {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 15; i++) {
       const c = companies[i % companies.length];
       const k = constraints[(i + idx) % constraints.length];
       const opts = rotate(t.opts, i);

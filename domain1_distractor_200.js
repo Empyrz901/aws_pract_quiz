@@ -9,7 +9,12 @@ function generateDomain1DistractorQuestions() {
     "A public sector agency",
     "A media company",
     "A manufacturing firm",
-    "An edtech platform"
+    "An edtech platform",
+    "A biotech startup",
+    "A global nonprofit organization",
+    "A telecom provider",
+    "A travel marketplace",
+    "An energy company"
   ];
 
   const constraints = [
@@ -22,7 +27,12 @@ function generateDomain1DistractorQuestions() {
     "lowest long-term TCO",
     "simplest operating model",
     "quickest migration path",
-    "best elasticity during demand spikes"
+    "best elasticity during demand spikes",
+    "highest compliance confidence",
+    "best global user experience",
+    "lowest recovery time objective",
+    "least implementation risk",
+    "most predictable scaling behavior"
   ];
 
   const templates = [
@@ -57,7 +67,7 @@ function generateDomain1DistractorQuestions() {
   const out = [];
   let idx = 0;
   templates.forEach((t) => {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 15; i++) {
       const c = companies[i % companies.length];
       const k = constraints[(i + idx) % constraints.length];
       const opts = rotate(t.opts, i);

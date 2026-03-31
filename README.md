@@ -8,11 +8,11 @@ A free, open-source interactive practice quiz for the **AWS Certified Cloud Prac
 
 ## Overview
 
-This is a static, single-page web application with a **2,154-question bank** and an **audited 1,086-question active pool** for exam-style practice across all four CLF-C02 domains. No backend, no login, no tracking — just open it and start practicing.
+This is a static, single-page web application with a **2,582-question bank** and an **audited 1,497-question active pool** for exam-style practice across all four CLF-C02 domains. No backend, no login, no tracking — just open it and start practicing.
 
 ## Features
 
-- **2,154 questions in source bank; 1,086 questions in active audited pool**
+- **2,582 questions in source bank; 1,497 questions in active audited pool**
 - **Single-answer and multi-answer** question types (Select TWO / Select THREE)
 - **Scenario-based questions** with business context â€” not just "What is X?" trivia
 - **Weighted exam mode** â€” selecting 65 questions draws proportionally by official domain weights
@@ -33,11 +33,11 @@ The CLF-C02 exam includes 65 total questions (50 scored and 15 unscored) and use
 
 | Domain | Name | Weight | In Bank | In Active Audited Pool |
 |--------|------|--------|---------|-------------------------|
-| 1 | Cloud Concepts | 24% | 529 | 276 |
-| 2 | Security & Compliance | 30% | 588 | 284 |
-| 3 | Cloud Technology & Services | 34% | 608 | 268 |
-| 4 | Billing, Pricing & Support | 12% | 429 | 258 |
-| | **Total** | **100%** | **2,154** | **1,086** |
+| 1 | Cloud Concepts | 24% | 633 | 373 |
+| 2 | Security & Compliance | 30% | 698 | 390 |
+| 3 | Cloud Technology & Services | 34% | 712 | 369 |
+| 4 | Billing, Pricing & Support | 12% | 539 | 365 |
+| | **Total** | **100%** | **2,582** | **1,497** |
 
 When you select "65 (official length)" with "All Domains", the quiz uses a **weighted random draw** aligned to official domain weights (~16 from D1, ~20 from D2, ~22 from D3, ~8 from D4) and pulls from the active audited pool (scenario-first, constraint-driven, and non-definition style).
 
