@@ -40,13 +40,13 @@ function generateDomain2DistractorQuestions() {
       task: "2.2",
       buildQuestion: (company, constraint) => `${company} runs 40 AWS accounts and needs a landing zone with guardrails, centralized logging, and standardized account provisioning. The CIO insists on ${constraint}. Which service should the team adopt first?`,
       options: [
-        "AWS Organizations with Service Control Policies only",
+        "AWS Organizations with Service Control Policies and custom account vending",
         "AWS Control Tower",
-        "AWS Security Hub",
-        "AWS Config conformance packs only"
+        "AWS Security Hub with central configuration",
+        "AWS Config conformance packs with StackSets"
       ],
       correct: "AWS Control Tower",
-      nextBest: "AWS Organizations with Service Control Policies only",
+      nextBest: "AWS Organizations with Service Control Policies and custom account vending",
       whyCorrect: "Control Tower provides a managed landing zone, account factory, and prebuilt governance guardrails.",
       whyNextBestWrong: "Organizations with SCPs is useful but does not provide the same managed account provisioning and out-of-box guardrail orchestration."
     },
@@ -54,69 +54,69 @@ function generateDomain2DistractorQuestions() {
       task: "2.2",
       buildQuestion: (company, constraint) => `${company} must detect any S3 bucket that becomes publicly accessible across multiple accounts within minutes. Security leadership requires ${constraint}. Which service combination is the best fit?`,
       options: [
-        "Amazon Macie automated discovery jobs",
+        "Amazon Macie automated discovery jobs with sensitive data alerts",
         "AWS Config managed rules with an aggregator",
-        "AWS Trusted Advisor checks only",
-        "Amazon Inspector scanning templates"
+        "AWS Security Hub controls with periodic review",
+        "Amazon Inspector scanning with EventBridge notifications"
       ],
       correct: "AWS Config managed rules with an aggregator",
-      nextBest: "Amazon Macie automated discovery jobs",
+      nextBest: "AWS Security Hub controls with periodic review",
       whyCorrect: "Config rules with an aggregator continuously evaluate bucket exposure and centralize compliance status across accounts.",
-      whyNextBestWrong: "Macie is excellent for sensitive data discovery, but bucket public access posture detection is more direct with Config compliance rules."
+      whyNextBestWrong: "Security Hub helps centralize findings, but Config rules are the more direct continuous control for evaluating bucket exposure state."
     },
     {
       task: "2.2",
       buildQuestion: (company, constraint) => `${company} hosts a public web application and is seeing repeated SQL injection and cross-site scripting attempts. The architecture team wants ${constraint}. Which AWS service should be implemented in front of the app?`,
       options: [
-        "AWS Shield Standard only",
+        "AWS Shield Advanced with proactive engagement",
         "AWS WAF with AWS Managed Rules",
-        "Amazon GuardDuty",
-        "AWS Network Firewall"
+        "Amazon GuardDuty with malware protection",
+        "AWS Network Firewall with Suricata rules"
       ],
       correct: "AWS WAF with AWS Managed Rules",
-      nextBest: "AWS Shield Standard only",
+      nextBest: "AWS Shield Advanced with proactive engagement",
       whyCorrect: "WAF inspects HTTP/S requests and blocks common Layer 7 exploit patterns with managed rule groups.",
-      whyNextBestWrong: "Shield Standard helps with volumetric DDoS protection but does not provide equivalent application-layer exploit filtering."
+      whyNextBestWrong: "Shield Advanced improves DDoS posture, but it still does not replace application-layer filtering for SQL injection and XSS."
     },
     {
       task: "2.2",
       buildQuestion: (company, constraint) => `${company} must encrypt S3 and EBS data with keys they control to satisfy internal compliance policy. The security manager demands ${constraint}. Which choice is most appropriate?`,
       options: [
-        "AWS managed service encryption keys only",
+        "AWS managed service encryption keys with default key policies",
         "AWS KMS customer managed keys with automatic rotation",
-        "Self-managed key servers on Amazon EC2",
-        "AWS CloudHSM with manual key lifecycle for all workloads"
+        "Self-managed key servers on Amazon EC2 with custom backup scripts",
+        "AWS CloudHSM-backed custom key store for every workload"
       ],
       correct: "AWS KMS customer managed keys with automatic rotation",
-      nextBest: "AWS managed service encryption keys only",
+      nextBest: "AWS CloudHSM-backed custom key store for every workload",
       whyCorrect: "KMS customer managed keys balance control, auditability, and managed lifecycle operations.",
-      whyNextBestWrong: "AWS managed keys reduce effort but do not provide the same customer-controlled key policy granularity."
+      whyNextBestWrong: "A CloudHSM-backed custom key store can add control, but it usually adds complexity far beyond what this requirement calls for."
     },
     {
       task: "2.3",
       buildQuestion: (company, constraint) => `${company} wants employees to use corporate directory credentials for AWS access across many accounts without creating IAM users per person. The requirement is ${constraint}. Which solution should be used?`,
       options: [
-        "IAM users synchronized from Active Directory by custom scripts",
+        "IAM users synchronized from Active Directory by lifecycle automation scripts",
         "AWS IAM Identity Center integrated with the corporate directory",
-        "Amazon Cognito user pools",
-        "Local IAM users with shared administrator credentials"
+        "Amazon Cognito user pools with SAML federation",
+        "Cross-account administrator roles assumed from a shared IAM user"
       ],
       correct: "AWS IAM Identity Center integrated with the corporate directory",
-      nextBest: "IAM users synchronized from Active Directory by custom scripts",
+      nextBest: "Amazon Cognito user pools with SAML federation",
       whyCorrect: "IAM Identity Center provides centralized federation, short-lived access, and account assignment workflows.",
-      whyNextBestWrong: "Scripted IAM user synchronization adds ongoing credential lifecycle and automation maintenance overhead."
+      whyNextBestWrong: "Cognito is aimed at application end users rather than workforce access to AWS accounts and account assignments."
     },
     {
       task: "2.2",
       buildQuestion: (company, constraint) => `${company} needs tamper-resistant API activity logs retained for seven years to support legal discovery. Finance asks for ${constraint}. Which architecture should be selected?`,
       options: [
         "AWS CloudTrail to Amazon S3 with Object Lock and lifecycle to S3 Glacier Deep Archive",
-        "AWS CloudTrail to CloudWatch Logs with no export strategy",
-        "AWS Config snapshots retained indefinitely",
-        "Amazon VPC Flow Logs stored in EBS snapshots"
+        "AWS CloudTrail to CloudWatch Logs with long retention and subscription filters",
+        "AWS Config snapshots with conformance pack history",
+        "Amazon Security Lake retaining normalized audit events only"
       ],
       correct: "AWS CloudTrail to Amazon S3 with Object Lock and lifecycle to S3 Glacier Deep Archive",
-      nextBest: "AWS CloudTrail to CloudWatch Logs with no export strategy",
+      nextBest: "AWS CloudTrail to CloudWatch Logs with long retention and subscription filters",
       whyCorrect: "S3 Object Lock provides immutability and Deep Archive offers low-cost long-term retention.",
       whyNextBestWrong: "CloudWatch Logs retention can work operationally but is typically less cost-efficient for multi-year archive requirements."
     },
@@ -125,12 +125,12 @@ function generateDomain2DistractorQuestions() {
       buildQuestion: (company, constraint) => `${company} suspects compromised credentials and needs managed threat detection based on API calls, DNS, and network telemetry without deploying host agents. The CISO wants ${constraint}. Which service should they enable?`,
       options: [
         "Amazon GuardDuty",
-        "Amazon Detective only",
-        "AWS CloudTrail Insights only",
-        "AWS WAF"
+        "Amazon Detective with behavior graphs",
+        "AWS CloudTrail Insights with anomaly detection",
+        "AWS Security Hub with foundational controls"
       ],
       correct: "Amazon GuardDuty",
-      nextBest: "AWS CloudTrail Insights only",
+      nextBest: "AWS CloudTrail Insights with anomaly detection",
       whyCorrect: "GuardDuty provides managed threat detection using multiple data sources and AWS threat intelligence.",
       whyNextBestWrong: "CloudTrail Insights detects unusual API patterns but is narrower and not a complete managed threat detection solution."
     },
@@ -139,12 +139,12 @@ function generateDomain2DistractorQuestions() {
       buildQuestion: (company, constraint) => `${company} must quickly provide SOC and ISO compliance reports to external auditors. The compliance office requests ${constraint}. Which AWS service should be used?`,
       options: [
         "AWS Artifact",
-        "AWS Audit Manager only",
-        "AWS Security Hub",
-        "AWS Config"
+        "AWS Audit Manager with delegated evidence collection",
+        "AWS Security Hub standards reports",
+        "AWS Config conformance packs"
       ],
       correct: "AWS Artifact",
-      nextBest: "AWS Audit Manager only",
+      nextBest: "AWS Audit Manager with delegated evidence collection",
       whyCorrect: "Artifact is the direct self-service source for AWS compliance reports and agreements.",
       whyNextBestWrong: "Audit Manager helps gather customer evidence but is not the primary source for AWS-issued compliance reports."
     },

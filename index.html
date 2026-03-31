@@ -315,6 +315,7 @@ let quiz = [], current = 0, score = 0, wrong = 0, answered = false, results = []
 let officialSimulation = false;
 let scoredQuestionIndices = new Set();
 let selectedDomain = "all";
+let shuffleEnabled = true;
 const GITHUB_REPO = 'Empyrz901/aws_pract_quiz';
 const EXAM_WEIGHTS = { 1: 0.24, 2: 0.30, 3: 0.34, 4: 0.12 };
 
@@ -335,18 +336,20 @@ function shuffle(arr) {
   return arr;
 }
 
-function weightedDraw(pool, count) {
+function weightedDraw(pool, count, doShuffle = true) {
   let picked = [];
   for (const domain in EXAM_WEIGHTS) {
-    const domainPool = shuffle(pool.filter(q => q.domain == domain));
+    const domainPool = pool.filter(q => q.domain == domain);
+    const orderedDomainPool = doShuffle ? shuffle([...domainPool]) : domainPool;
     const n = Math.round(count * EXAM_WEIGHTS[domain]);
-    picked = picked.concat(domainPool.slice(0, n));
+    picked = picked.concat(orderedDomainPool.slice(0, n));
   }
   // Fill any rounding gaps
   const pickedSet = new Set(picked);
-  const remaining = shuffle(pool.filter(q => !pickedSet.has(q)));
+  const remainingPool = pool.filter(q => !pickedSet.has(q));
+  const remaining = doShuffle ? shuffle([...remainingPool]) : remainingPool;
   while (picked.length < count && remaining.length) picked.push(remaining.shift());
-  return shuffle(picked).slice(0, count);
+  return doShuffle ? shuffle(picked).slice(0, count) : picked.slice(0, count);
 }
 
 function isDefinitionLikeQuestion(text) {
@@ -377,6 +380,7 @@ function isHardExamStyle(q) {
 
 function startQuiz() {
   const doShuffle = document.getElementById('shuffle-toggle').checked;
+  shuffleEnabled = doShuffle;
   let pool = selectedDomain === "all" ? [...ALL_QUESTIONS] : ALL_QUESTIONS.filter(q => q.domain == selectedDomain);
   if (doShuffle) pool = shuffle(pool);
   let count = parseInt(document.getElementById('q-count').value);
@@ -390,8 +394,10 @@ function startQuiz() {
     officialSimulation = true;
     const hardPool = pool.filter(isHardExamStyle);
     const sourcePool = hardPool.length >= 65 ? hardPool : pool;
-    quiz = weightedDraw(sourcePool, 65);
-    const idxs = shuffle(Array.from({ length: 65 }, (_, i) => i));
+    quiz = weightedDraw(sourcePool, 65, doShuffle);
+    const idxs = doShuffle
+      ? shuffle(Array.from({ length: 65 }, (_, i) => i))
+      : Array.from({ length: 65 }, (_, i) => i);
     scoredQuestionIndices = new Set(idxs.slice(15)); // 50 scored, 15 unscored
   } else {
     quiz = pool.slice(0, count);
@@ -424,8 +430,8 @@ function renderQuestion() {
   answered = alreadyAnswered;
   multiSelections = [];
   document.getElementById('s-question').textContent = `${current+1}/${quiz.length}`;
-  document.getElementById('s-correct').textContent = score;
-  document.getElementById('s-wrong').textContent = wrong;
+  document.getElementById('s-correct').textContent = officialSimulation ? '-' : score;
+  document.getElementById('s-wrong').textContent = officialSimulation ? '-' : wrong;
   document.getElementById('progress-bar').style.width = `${((current)/quiz.length)*100}%`;
   document.getElementById('q-domain').textContent = DOMAIN_NAMES[q.domain] + ` \u2022 Task ${q.task}`;
   const scoredHint = officialSimulation
@@ -569,8 +575,8 @@ function submitMulti() {
 }
 
 function showPostAnswer() {
-  document.getElementById('s-correct').textContent = score;
-  document.getElementById('s-wrong').textContent = wrong;
+  document.getElementById('s-correct').textContent = officialSimulation ? '-' : score;
+  document.getElementById('s-wrong').textContent = officialSimulation ? '-' : wrong;
 
   const exp = document.getElementById('q-explanation');
   exp.textContent = quiz[current].explain;
@@ -705,7 +711,7 @@ function restart() {
 function retryWrong() {
   const wrongQs = quiz.filter((q, i) => results[i] && !results[i].correct);
   if (wrongQs.length === 0) { restart(); return; }
-  quiz = shuffle([...wrongQs]);
+  quiz = shuffleEnabled ? shuffle([...wrongQs]) : [...wrongQs];
   officialSimulation = false;
   scoredQuestionIndices = new Set(Array.from({ length: quiz.length }, (_, i) => i));
   current = 0; score = 0; wrong = 0; results = new Array(quiz.length).fill(null); answered = false; seconds = 0;
