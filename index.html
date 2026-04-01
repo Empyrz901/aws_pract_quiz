@@ -935,6 +935,10 @@ function startTimer() {
 
 let multiSelections = [];
 
+function shouldRevealAnswersDuringQuiz() {
+  return !officialSimulation;
+}
+
 function renderQuestion() {
   const q = quiz[current];
   const alreadyAnswered = results[current] !== null;
@@ -970,21 +974,30 @@ function renderQuestion() {
 
   // Restore state if already answered (navigating back)
   if (alreadyAnswered) {
-    const correctIndices = isMulti ? q.ans : [q.ans];
     const optEls = document.querySelectorAll('.option');
+    const r = results[current];
+    const pickedIndices = r && Array.isArray(r._picks) ? r._picks : [];
     optEls.forEach(el => {
       el.classList.add('disabled');
       const i = parseInt(el.dataset.idx);
-      if (correctIndices.includes(i)) el.classList.add('correct');
+      if (pickedIndices.includes(i)) el.classList.add('picked');
     });
-    // Show wrong picks
-    const r = results[current];
-    if (!r.correct && r.yourAnswer !== 'Skipped') {
-      const yourIdxs = r._picks || [];
-      yourIdxs.forEach(i => { if (!correctIndices.includes(i)) optEls[i].classList.add('wrong'); });
+
+    if (shouldRevealAnswersDuringQuiz()) {
+      const correctIndices = isMulti ? q.ans : [q.ans];
+      optEls.forEach(el => {
+        const i = parseInt(el.dataset.idx);
+        if (correctIndices.includes(i)) el.classList.add('correct');
+      });
+      if (!r.correct && r.yourAnswer !== 'Skipped') {
+        pickedIndices.forEach(i => { if (!correctIndices.includes(i)) optEls[i].classList.add('wrong'); });
+      }
+      exp.textContent = q.explain;
+      exp.classList.add('show');
+    } else {
+      exp.classList.remove('show');
+      exp.textContent = '';
     }
-    exp.textContent = q.explain;
-    exp.classList.add('show');
   } else {
     exp.classList.remove('show');
     exp.textContent = '';
@@ -1015,14 +1028,21 @@ function selectOption(idx) {
     optEls.forEach(el => {
       el.classList.add('disabled');
       const i = parseInt(el.dataset.idx);
-      if (correctIndices.includes(i)) el.classList.add('correct');
+      if (i === idx) el.classList.add('picked');
     });
     const counted = scoredQuestionIndices.has(current);
     if (!isCorrect) {
-      optEls[idx].classList.add('wrong');
+      if (shouldRevealAnswersDuringQuiz()) optEls[idx].classList.add('wrong');
       if (counted) wrong++;
     } else {
       if (counted) score++;
+    }
+
+    if (shouldRevealAnswersDuringQuiz()) {
+      optEls.forEach(el => {
+        const i = parseInt(el.dataset.idx);
+        if (correctIndices.includes(i)) el.classList.add('correct');
+      });
     }
 
     results[current] = { q: q.q, correct: isCorrect, yourAnswer: q.opts[idx], rightAnswer: correctIndices.map(i => q.opts[i]).join(', '), explain: q.explain, _picks: [idx], _counted: counted };
@@ -1070,8 +1090,15 @@ function submitMulti() {
     el.classList.remove('picked');
     el.classList.add('disabled');
     const i = parseInt(el.dataset.idx);
-    if (correctIndices.includes(i)) el.classList.add('correct');
-    if (multiSelections.includes(i) && !correctIndices.includes(i)) el.classList.add('wrong');
+    if (multiSelections.includes(i)) el.classList.add('picked');
+  });
+
+  if (shouldRevealAnswersDuringQuiz()) {
+    optEls.forEach(el => {
+      const i = parseInt(el.dataset.idx);
+      if (correctIndices.includes(i)) el.classList.add('correct');
+      if (multiSelections.includes(i) && !correctIndices.includes(i)) el.classList.add('wrong');
+    });
   });
 
   const counted = scoredQuestionIndices.has(current);
@@ -1090,8 +1117,13 @@ function showPostAnswer() {
   document.getElementById('s-wrong').textContent = officialSimulation ? '-' : wrong;
 
   const exp = document.getElementById('q-explanation');
-  exp.textContent = quiz[current].explain;
-  exp.classList.add('show');
+  if (shouldRevealAnswersDuringQuiz()) {
+    exp.textContent = quiz[current].explain;
+    exp.classList.add('show');
+  } else {
+    exp.textContent = '';
+    exp.classList.remove('show');
+  }
 
   document.getElementById('btn-submit').classList.add('hidden');
   document.getElementById('btn-next').classList.remove('hidden');
