@@ -861,8 +861,8 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.3",
-    q: "Which AWS Support plan provides access to a Technical Account Manager (TAM)?",
-    opts: ["Basic", "Developer", "Business", "Enterprise"],
+    q: "Which AWS Support plan provides a designated Technical Account Manager (TAM)?",
+    opts: ["Basic", "Developer", "Business Support+", "Enterprise Support"],
     ans: 3,
     explain: "Only the Enterprise Support plan provides a designated Technical Account Manager (TAM) who provides proactive guidance and advocacy."
   },
@@ -870,20 +870,20 @@ const DOMAIN4_QUESTIONS = [
     domain: 4,
     task: "4.3",
     q: "Which AWS Support plans provide 24/7 access to Cloud Support Engineers via phone, chat, and email? (Choose TWO.)",
-    opts: ["Basic", "Developer", "Business", "Enterprise On-Ramp", "Enterprise"],
-    ans: [2, 4],
+    opts: ["Basic", "Developer", "Business Support+", "Enterprise Support", "AWS re:Post"],
+    ans: [2, 3],
     multi: true,
-    explain: "Business and Enterprise Support plans provide 24/7 access to Cloud Support Engineers via phone, chat, and email for technical support."
+    explain: "Business Support+ and Enterprise Support provide 24/7 access to Cloud Support Engineers via phone, chat, and email for technical support."
   },
   {
     domain: 4,
     task: "4.3",
     q: "What is the fastest response time available for business-critical system down issues?",
     opts: [
-      "1 hour (Business plan)",
-      "15 minutes (Enterprise plan)",
-      "30 minutes (Enterprise On-Ramp plan)",
-      "4 hours (Developer plan)"
+      "1 hour (Business Support+)",
+      "15 minutes (Enterprise Support)",
+      "4 hours (production impaired case)",
+      "12 hours (Developer system impaired case)"
     ],
     ans: 1,
     explain: "The Enterprise Support plan offers a 15-minute response time for business/mission-critical system down cases, the fastest available."
@@ -892,7 +892,7 @@ const DOMAIN4_QUESTIONS = [
     domain: 4,
     task: "4.3",
     q: "Which AWS Support plan is free and available to all AWS customers?",
-    opts: ["Developer", "Basic", "Business", "Enterprise On-Ramp"],
+    opts: ["Developer", "Basic", "Business Support+", "Enterprise Support"],
     ans: 1,
     explain: "The Basic Support plan is free for all AWS customers and includes access to documentation, whitepapers, and limited Trusted Advisor checks."
   },
@@ -907,36 +907,36 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.3",
-    q: "How many Trusted Advisor checks are available with the Basic and Developer Support plans?",
+    q: "A company on the free support tier opens AWS Trusted Advisor and notices that most recommendations are unavailable. What level of access should it expect on Basic Support?",
     opts: [
-      "All checks are available",
-      "A limited set of core checks (7 checks)",
-      "No checks are available",
-      "Only security-related checks"
+      "Access to all Trusted Advisor checks",
+      "A limited set of core checks such as selected security and service quota checks",
+      "No Trusted Advisor access at all",
+      "Only cost optimization checks"
     ],
     ans: 1,
-    explain: "Basic and Developer Support plans include a limited set of core Trusted Advisor checks, primarily focused on security and service limits."
+    explain: "Basic Support includes only a limited set of core Trusted Advisor checks rather than the full catalog of recommendations."
   },
   {
     domain: 4,
     task: "4.3",
-    q: "Which AWS Support plan is required to get access to the full set of Trusted Advisor checks?",
-    opts: ["Basic", "Developer", "Business", "Enterprise only"],
+    q: "What is the minimum current AWS Support plan that provides access to the full set of Trusted Advisor checks?",
+    opts: ["Basic", "Developer", "Business Support+", "Enterprise Support only"],
     ans: 2,
-    explain: "Business, Enterprise On-Ramp, and Enterprise Support plans provide access to the full set of Trusted Advisor checks across all five categories."
+    explain: "AWS documents full Trusted Advisor access for Business Support+, Enterprise Support, and AWS Unified Operations. Business Support+ is the minimum current plan that includes the full set of checks."
   },
   {
     domain: 4,
     task: "4.3",
-    q: "What is the AWS Health Dashboard used for?",
+    q: "A company wants a personalized AWS view that shows service events and scheduled changes affecting its own resources. Which AWS feature should it use?",
     opts: [
-      "Monitoring the health of EC2 instances using custom metrics",
-      "Providing personalized view of the health of AWS services and any events that may affect your account",
-      "Tracking the physical health of data center hardware",
-      "Monitoring the health of on-premises servers"
+      "Amazon CloudWatch metrics for EC2 instances",
+      "AWS Health Dashboard",
+      "Physical data center hardware telemetry",
+      "On-premises server monitoring"
     ],
     ans: 1,
-    explain: "The AWS Health Dashboard provides a personalized view of the health of AWS services that are relevant to your account and any ongoing events that may affect your resources."
+    explain: "AWS Health Dashboard provides a personalized account view of AWS service events and planned changes that may affect your resources."
   },
   {
     domain: 4,
@@ -991,23 +991,23 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.3",
-    q: "What is AWS Professional Services?",
+    q: "A company needs direct help from AWS experts to accelerate a complex migration and improve its cloud operating model. Which AWS resource best fits this need?",
     opts: [
-      "A team that manages your AWS infrastructure for you",
-      "A global team of experts that helps customers achieve desired outcomes through cloud adoption using the AWS CAF",
+      "A managed service that runs the customer's infrastructure day to day",
+      "AWS Professional Services",
       "A certification program for AWS engineers",
-      "A service that automatically optimizes your AWS architecture"
+      "A tool that automatically optimizes every workload"
     ],
     ans: 1,
-    explain: "AWS Professional Services is a global team of experts that works with customers to accelerate cloud adoption, using frameworks like the AWS Cloud Adoption Framework (CAF)."
+    explain: "AWS Professional Services provides expert-led engagements to help customers accelerate migrations, modernization, and cloud adoption outcomes."
   },
   {
     domain: 4,
     task: "4.3",
     q: "Which AWS Support plan offers a response time of less than 1 hour for production system down cases?",
-    opts: ["Basic", "Developer", "Business", "Enterprise only"],
+    opts: ["Basic", "Developer", "Business Support+", "Enterprise Support only"],
     ans: 2,
-    explain: "Business and above offer a less than 1-hour response time for production system down cases."
+    explain: "Business Support+ provides a less than 1-hour response time for production system down cases."
   },
   {
     domain: 4,
@@ -1025,31 +1025,31 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.3",
-    q: "Which AWS Support plan provides access to the AWS Health API for programmatic access to health events?",
-    opts: ["Basic", "Developer", "Business", "Enterprise only"],
+    q: "What is the minimum current AWS Support plan that provides access to the AWS Health API for programmatic health-event access?",
+    opts: ["Basic", "Developer", "Business Support+", "Enterprise Support only"],
     ans: 2,
-    explain: "Business, Enterprise On-Ramp, and Enterprise Support plans provide access to the AWS Health API for programmatic integration with your monitoring tools."
+    explain: "AWS Health API access is documented for Business Support+, Enterprise Support, and AWS Unified Operations. Business Support+ is the minimum current plan that includes it."
   },
   {
     domain: 4,
     task: "4.3",
     q: "A small startup is just beginning to use AWS and needs technical support during business hours for non-production workloads. Which Support plan is most appropriate?",
-    opts: ["Basic", "Developer", "Business", "Enterprise"],
+    opts: ["Basic", "Developer", "Business Support+", "Enterprise Support"],
     ans: 1,
     explain: "The Developer Support plan provides email access to Cloud Support Associates during business hours, suitable for development and testing workloads."
   },
   {
     domain: 4,
     task: "4.3",
-    q: "What does the Enterprise On-Ramp Support plan offer that the Business plan does not?",
+    q: "What does Enterprise Support provide that Business Support+ does not?",
     opts: [
       "24/7 phone and chat support",
       "Full Trusted Advisor checks",
-      "A pool of Technical Account Managers (TAMs) for guidance",
+      "A designated Technical Account Manager (TAM) for proactive guidance",
       "Access to AWS Documentation"
     ],
     ans: 2,
-    explain: "Enterprise On-Ramp provides access to a pool of TAMs (not a designated one), offering proactive guidance that the Business plan does not include."
+    explain: "Enterprise Support includes a designated TAM. Business Support+ includes 24/7 technical support and full Trusted Advisor checks, but not a designated TAM."
   },
   {
     domain: 4,
@@ -1070,9 +1070,9 @@ const DOMAIN4_QUESTIONS = [
     domain: 4,
     task: "4.3",
     q: "Which AWS Support plan is recommended for companies running production workloads on AWS and needing 24/7 technical support?",
-    opts: ["Basic", "Developer", "Business", "Enterprise only"],
+    opts: ["Basic", "Developer", "Business Support+", "Enterprise Support only"],
     ans: 2,
-    explain: "The Business Support plan is recommended for production workloads, providing 24/7 access to Cloud Support Engineers via phone, chat, and email."
+    explain: "Business Support+ is the minimum current plan recommended for production workloads that need 24/7 access to Cloud Support Engineers."
   },
   {
     domain: 4,
@@ -1176,18 +1176,18 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.3",
-    q: "What is the response time for a business-critical system down case on the Enterprise On-Ramp Support plan?",
+    q: "A company running mission-critical workloads wants the fastest published AWS response time for a business-critical system down case. What response time should it expect with Enterprise Support?",
     opts: ["15 minutes", "30 minutes", "1 hour", "4 hours"],
-    ans: 1,
-    explain: "Enterprise On-Ramp offers a 30-minute response time for business-critical system down cases, compared to 15 minutes for Enterprise."
+    ans: 0,
+    explain: "Enterprise Support provides the fastest published response target for business-critical system down cases: less than 15 minutes."
   },
   {
     domain: 4,
     task: "4.3",
-    q: "Which AWS Support plan provides access to Infrastructure Event Management to help plan for large-scale events like product launches?",
-    opts: ["Basic", "Developer", "Business (for additional fee)", "Developer (for additional fee)"],
-    ans: 2,
-    explain: "Business Support includes Infrastructure Event Management for an additional fee, while Enterprise and Enterprise On-Ramp include it at no extra charge."
+    q: "A company is planning a major product launch and wants AWS-led event preparation and guidance for the rollout. Which support offering should it look for?",
+    opts: ["AWS Trusted Advisor", "AWS Countdown event management through Enterprise Support", "AWS re:Post", "Basic Support"],
+    ans: 1,
+    explain: "AWS Countdown event management is the AWS support offering for planned critical business events such as launches and cutovers."
   },
   {
     domain: 4,
@@ -1200,17 +1200,15 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.3",
-    q: "Which of the following describes the Developer Support plan? (Choose TWO.)",
+    q: "A development team needs technical guidance for non-production workloads and can work within business hours. Which description best matches Developer Support?",
     opts: [
-      "24/7 phone and chat support",
-      "Email access to Cloud Support Associates during business hours",
-      "General guidance response time of less than 24 hours",
-      "Includes a designated Technical Account Manager",
-      "Provides Infrastructure Event Management at no additional cost"
+      "24/7 phone, chat, and email access to Cloud Support Engineers",
+      "Business-hours technical support with less than 24-hour response for general guidance",
+      "A designated TAM for proactive reviews",
+      "No technical support cases, only billing assistance"
     ],
-    ans: [1, 2],
-    multi: true,
-    explain: "Developer Support provides business-hours email access to Cloud Support Associates with general guidance responses in less than 24 hours and system impaired responses in less than 12 hours."
+    ans: 1,
+    explain: "Developer Support is intended for development and testing use cases and provides business-hours technical support with less than 24-hour response for general guidance."
   },
   {
     domain: 4,
@@ -1228,15 +1226,15 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.3",
-    q: "Which Trusted Advisor check is available to Basic Support plan customers?",
+    q: "Which type of Trusted Advisor access is available to customers on the Basic Support plan?",
     opts: [
-      "Low utilization EC2 instances",
-      "S3 bucket permissions (public access)",
-      "Underutilized EBS volumes",
-      "Idle load balancers"
+      "Only cost optimization recommendations",
+      "Selected core security and service quota checks",
+      "The full set of Trusted Advisor checks",
+      "No Trusted Advisor checks at all"
     ],
     ans: 1,
-    explain: "S3 bucket permissions check (identifying publicly accessible buckets) is one of the core security checks available to all customers, including Basic Support."
+    explain: "Basic Support includes only selected core Trusted Advisor checks, such as certain security and service quota checks, rather than the full set."
   },
   {
     domain: 4,
@@ -1254,7 +1252,7 @@ const DOMAIN4_QUESTIONS = [
       "The Dashboard shows public AWS service events while the API only shows account-specific events",
       "The Dashboard provides a visual console view while the API enables programmatic access to health data",
       "They are the same feature with different names",
-      "The API is available to all customers while the Dashboard requires Business Support"
+      "The API is available to all customers while the Dashboard requires Business Support+"
     ],
     ans: 1,
     explain: "The AWS Health Dashboard provides a visual console-based view of service health, while the AWS Health API provides programmatic access for automation and integration."
@@ -1263,15 +1261,15 @@ const DOMAIN4_QUESTIONS = [
     domain: 4,
     task: "4.3",
     q: "Which AWS Support plan offers the lowest-cost option that includes 24/7 phone, chat, and email support?",
-    opts: ["Basic", "Developer", "Business", "Enterprise On-Ramp"],
+    opts: ["Basic", "Developer", "Business Support+", "Enterprise Support"],
     ans: 2,
-    explain: "Business is the lowest-cost support plan that includes 24/7 access to Cloud Support Engineers via phone, chat, and email."
+    explain: "Business Support+ is the lowest-cost current support plan that includes 24/7 access to Cloud Support Engineers via phone, chat, and email."
   },
   {
     domain: 4,
     task: "4.3",
-    q: "A company running mission-critical workloads needs the fastest possible response time and a dedicated TAM. Which Support plan should they choose?",
-    opts: ["Business", "Enterprise On-Ramp", "Enterprise", "Developer"],
+    q: "A company running mission-critical workloads needs the fastest possible response time and a designated TAM. Which Support plan should they choose?",
+    opts: ["Business Support+", "AWS Unified Operations", "Enterprise Support", "Developer"],
     ans: 2,
     explain: "Enterprise Support offers a 15-minute response time for critical issues and includes a designated TAM, making it ideal for mission-critical operations."
   },
@@ -1411,10 +1409,10 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.3",
-    q: "Which AWS Support plan provides access to the full set of Trusted Advisor checks?",
-    opts: ["Basic", "Developer", "Business", "Only Enterprise"],
+    q: "Which AWS Support plan provides the minimum current support tier for full Trusted Advisor access?",
+    opts: ["Basic", "Developer", "Business Support+", "Only Enterprise Support"],
     ans: 2,
-    explain: "Business, Enterprise On-Ramp, and Enterprise Support plans provide access to the full set of AWS Trusted Advisor checks. Basic and Developer plans only get core checks."
+    explain: "Business Support+ is the minimum current plan that includes the full set of AWS Trusted Advisor checks. Enterprise Support and AWS Unified Operations also include full access."
   },
   {
     domain: 4,
@@ -1427,10 +1425,10 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.3",
-    q: "What is the response time for a production system down case under the AWS Business Support plan?",
+    q: "A production workload is down and the team needs the response target for Business Support+. What is the published response time for a production system down case?",
     opts: ["15 minutes", "1 hour", "4 hours", "12 hours"],
     ans: 1,
-    explain: "AWS Business Support provides a 1-hour response time for production system down cases, while Enterprise Support offers a 15-minute response time for critical issues."
+    explain: "Business Support+ provides a less than 1-hour response time for production system down cases. Enterprise Support is faster for business-critical cases."
   },
   {
     domain: 4,
@@ -1602,7 +1600,7 @@ const DOMAIN4_QUESTIONS = [
   {
     domain: 4,
     task: "4.3",
-    q: "Which of the following features are included in the AWS Enterprise Support plan but NOT in the Business Support plan? (Select TWO)",
+    q: "Which of the following features are included in the AWS Enterprise Support plan but NOT in Business Support+? (Select TWO)",
     opts: [
       "A designated Technical Account Manager (TAM)",
       "Full set of Trusted Advisor checks",
@@ -1612,7 +1610,7 @@ const DOMAIN4_QUESTIONS = [
     ],
     ans: [0, 2],
     multi: true,
-    explain: "Enterprise Support provides a designated TAM and a 15-minute response time for critical issues. Business Support includes full Trusted Advisor, 24/7 engineer access, and Health API, but does not include a designated TAM or the 15-minute SLA."
+    explain: "Enterprise Support provides a designated TAM and a 15-minute response time for critical issues. Business Support+ includes full Trusted Advisor, 24/7 engineer access, and Health API, but does not include a designated TAM or the 15-minute SLA."
   },
   {
     domain: 4,
@@ -1657,7 +1655,7 @@ const DOMAIN4_QUESTIONS = [
     ],
     ans: [0, 2],
     multi: true,
-    explain: "Basic and Developer Support customers have access to core Trusted Advisor checks, which include security checks like S3 bucket permissions and service limits checks. Cost optimization checks like idle load balancers and underutilized resources require Business Support or higher."
+    explain: "Basic and Developer Support customers have access to core Trusted Advisor checks, which include security checks like S3 bucket permissions and service limits checks. Cost optimization checks like idle load balancers and underutilized resources require Business Support+ or higher."
   },
 
   // ===== ADDITIONAL SIMPLE QUESTIONS =====
@@ -1695,22 +1693,22 @@ const DOMAIN4_QUESTIONS = [
   { domain: 4, task: "4.2", q: "What does the AWS Migration Evaluator (formerly TSO Logic) help customers assess?", opts: ["Security posture before migrating", "The business case and TCO of migrating to AWS", "Network bandwidth requirements", "Application performance after migration"], ans: 1, explain: "Migration Evaluator analyzes on-premises costs and models the projected TCO and savings of moving to AWS." },
   { domain: 4, task: "4.2", q: "Which AWS service or feature lets you group accounts into organizational units (OUs) for policy management?", opts: ["AWS IAM Groups", "AWS Organizations", "AWS Control Tower", "AWS Service Catalog"], ans: 1, explain: "AWS Organizations lets you group accounts into OUs and apply Service Control Policies (SCPs) to each OU." },
   { domain: 4, task: "4.2", q: "Which of the following is NOT a category in AWS Cost Explorer's cost analysis?", opts: ["Service", "Linked account", "Tag", "Availability Zone latency"], ans: 3, explain: "Cost Explorer filters by service, account, region, tag, and more — but not by latency metrics." },
-  { domain: 4, task: "4.2", q: "What is the minimum AWS Support plan that includes access to a Technical Account Manager (TAM)?", opts: ["Developer", "Business", "Enterprise On-Ramp", "Enterprise"], ans: 3, explain: "A dedicated TAM is available only on the Enterprise Support plan (not Enterprise On-Ramp, which has a pool of TAMs)." },
-  { domain: 4, task: "4.3", q: "Which AWS Support plan is the entry-level paid plan and is best suited for developers in testing environments?", opts: ["Basic", "Developer", "Business", "Enterprise"], ans: 1, explain: "The Developer plan is the first paid tier, recommended for development and testing at $29/month minimum." },
-  { domain: 4, task: "4.3", q: "What is the response time for a production system impaired case under the Business Support plan?", opts: ["Less than 24 hours", "Less than 12 hours", "Less than 4 hours", "Less than 1 hour"], ans: 2, explain: "Business Support guarantees a < 4-hour response time for production system impaired cases." },
-  { domain: 4, task: "4.3", q: "Which AWS Support plan provides 24/7 phone, email, and chat access to Cloud Support Engineers?", opts: ["Basic", "Developer", "Business", "All paid plans"], ans: 2, explain: "Business Support and above include 24/7 access to Cloud Support Engineers via phone, email, and chat." },
+  { domain: 4, task: "4.2", q: "What is the minimum AWS Support plan that includes a designated Technical Account Manager (TAM)?", opts: ["Developer", "Business Support+", "AWS Unified Operations", "Enterprise Support"], ans: 3, explain: "A designated TAM is an Enterprise Support feature." },
+  { domain: 4, task: "4.3", q: "Which AWS Support plan is the entry-level paid option and is best suited for developers working in testing environments?", opts: ["Basic", "Developer", "Business Support+", "Enterprise Support"], ans: 1, explain: "Developer Support is the entry-level paid support plan and is best suited for development and testing workloads." },
+  { domain: 4, task: "4.3", q: "What is the response time for a production system impaired case under Business Support+?", opts: ["Less than 24 hours", "Less than 12 hours", "Less than 4 hours", "Less than 1 hour"], ans: 2, explain: "Business Support+ provides a less than 4-hour response time for production system impaired cases." },
+  { domain: 4, task: "4.3", q: "Which AWS Support plan provides 24/7 phone, email, and chat access to Cloud Support Engineers at the lowest current tier?", opts: ["Basic", "Developer", "Business Support+", "All paid plans"], ans: 2, explain: "Business Support+ is the lowest current support tier that includes 24/7 access to Cloud Support Engineers via phone, email, and chat." },
   { domain: 4, task: "4.3", q: "What is the AWS resource that provides technical documentation, white papers, and forums available to all customers at no cost?", opts: ["AWS Developer Support", "AWS Basic Support", "AWS IQ", "AWS re:Post"], ans: 1, explain: "Basic Support (free) includes access to documentation, whitepapers, and the AWS community forum (re:Post)." },
   { domain: 4, task: "4.3", q: "Which AWS tool provides real-time guidance across five categories: cost, performance, security, fault tolerance, and service limits?", opts: ["AWS Config", "AWS Inspector", "AWS Trusted Advisor", "AWS Well-Architected Tool"], ans: 2, explain: "Trusted Advisor checks your environment against AWS best practices across five pillars." },
-  { domain: 4, task: "4.3", q: "Full access to all AWS Trusted Advisor checks requires which minimum Support plan?", opts: ["Basic", "Developer", "Business", "Enterprise"], ans: 2, explain: "Business Support (and above) unlocks all Trusted Advisor checks, including cost optimization and performance." },
+  { domain: 4, task: "4.3", q: "Full access to all AWS Trusted Advisor checks requires which minimum current Support plan?", opts: ["Basic", "Developer", "Business Support+", "Enterprise Support"], ans: 2, explain: "Business Support+ is the minimum current support plan that includes full Trusted Advisor access. Enterprise Support and AWS Unified Operations also include full access." },
   { domain: 4, task: "4.3", q: "What is AWS re:Post?", opts: ["A premium support ticketing portal", "A community Q&A platform that replaced AWS Forums", "An AWS-managed blog for announcements", "A developer certification program"], ans: 1, explain: "AWS re:Post is a community-driven Q&A service that replaced the original AWS Developer Forums." },
-  { domain: 4, task: "4.3", q: "Which AWS Support plan includes a concierge-like service for billing inquiries and account questions?", opts: ["Developer", "Business", "Enterprise On-Ramp", "Enterprise"], ans: 3, explain: "The Enterprise Support plan includes an AWS Concierge Support team for billing and account assistance." },
+  { domain: 4, task: "4.3", q: "Which AWS Support plan includes Concierge Support for billing and account questions?", opts: ["Developer", "Business Support+", "Enterprise Support", "Basic"], ans: 2, explain: "Enterprise Support includes AWS Concierge Support for billing and account assistance." },
   { domain: 4, task: "4.3", q: "What is the primary purpose of the AWS Partner Network (APN)?", opts: ["To provide free AWS credits to startups", "To connect AWS customers with AWS-certified consulting and technology partners", "To manage AWS Marketplace listings", "To offer enterprise support services directly"], ans: 1, explain: "The APN is a global program that connects customers with vetted AWS consulting and technology partners." },
   { domain: 4, task: "4.3", q: "Which service allows customers to find, buy, and deploy third-party software that runs on AWS?", opts: ["AWS Service Catalog", "AWS Partner Network", "AWS Marketplace", "AWS AppExchange"], ans: 2, explain: "AWS Marketplace is a curated digital catalog of third-party software solutions deployable on AWS." },
   { domain: 4, task: "4.3", q: "What is the response time for a business-critical system down case under the Enterprise Support plan?", opts: ["Less than 4 hours", "Less than 1 hour", "Less than 15 minutes", "Immediate, no waiting"], ans: 2, explain: "Enterprise Support guarantees a < 15-minute response for business-critical system down (Sev 1) cases." },
   { domain: 4, task: "4.3", q: "Which AWS program provides AWS credits, training, and support to early-stage startups?", opts: ["AWS Marketplace", "AWS Activate", "AWS IQ", "AWS re:Start"], ans: 1, explain: "AWS Activate offers startups free credits, training, and technical support to help them build on AWS." },
-  { domain: 4, task: "4.3", q: "Which AWS Support plan is the minimum required to open an unlimited number of support cases?", opts: ["Basic", "Developer", "Business", "Enterprise"], ans: 1, explain: "Developer plan allows unlimited support cases; Basic plan allows only limited account and billing cases." },
+  { domain: 4, task: "4.3", q: "Which AWS Support plan is the lowest-cost paid option that allows unlimited technical support cases?", opts: ["Basic", "Developer", "Business Support+", "Enterprise Support"], ans: 1, explain: "Developer Support is the lowest-cost paid support plan and allows unlimited technical support cases. Basic Support does not include technical support cases." },
   { domain: 4, task: "4.3", q: "Which AWS resource provides self-paced digital courses and classroom training for AWS services?", opts: ["AWS re:Post", "AWS Skill Builder and AWS Training", "AWS Trusted Advisor", "AWS Config"], ans: 1, explain: "AWS Skill Builder and AWS Training offer self-paced courses and instructor-led classes for learning AWS." },
-  { domain: 4, task: "4.3", q: "Which of the following Support plans includes Infrastructure Event Management (IEM) for an additional fee?", opts: ["Developer", "Business", "Enterprise On-Ramp", "Enterprise"], ans: 1, explain: "Business Support customers can purchase Infrastructure Event Management as an add-on for planned events." },
+  { domain: 4, task: "4.3", q: "A company wants AWS guidance for a planned launch and needs an event-focused support offering rather than a general forum or documentation. Which AWS support capability best matches that need?", opts: ["AWS Countdown event management", "AWS re:Post", "AWS Knowledge Center", "AWS Artifact"], ans: 0, explain: "AWS Countdown event management is the AWS support capability used for planned launches, migrations, and other critical events that need AWS guidance." },
   { domain: 4, task: "4.3", q: "Which AWS service provides a personalized view of AWS service health events affecting your account?", opts: ["AWS Trusted Advisor", "AWS Personal Health Dashboard (AWS Health)", "Amazon CloudWatch", "AWS Config"], ans: 1, explain: "AWS Health (Personal Health Dashboard) shows service events and maintenance that impact your specific resources." },
 
   // --- Scenario-based questions ---
@@ -1723,16 +1721,16 @@ const DOMAIN4_QUESTIONS = [
   { domain: 4, task: "4.2", q: "A company wants to receive an email alert when their monthly AWS spending is projected to exceed $10,000. Which service should they configure?", opts: ["AWS Cost Explorer with saved reports", "AWS Budgets with a cost budget and alert threshold", "Amazon CloudWatch billing alarms", "AWS Trusted Advisor cost optimization checks"], ans: 1, explain: "AWS Budgets lets you set custom cost thresholds and sends alerts (email, SNS) when actual or forecasted spending exceeds them. Cost Explorer analyzes past spending but doesn't alert. CloudWatch billing alarms exist but are less feature-rich than Budgets. Trusted Advisor recommends savings, not budget alerts." },
   { domain: 4, task: "4.2", q: "A company with five business units wants each unit to track and manage their own AWS costs independently. Which AWS feature supports this organizational structure?", opts: ["AWS Organizations with separate accounts per business unit and consolidated billing", "A single AWS account with shared IAM users per business unit", "Separate AWS Regions per business unit for cost isolation", "Amazon S3 buckets per business unit for cost tracking"], ans: 0, explain: "AWS Organizations lets each business unit have its own account for independent cost tracking while benefiting from consolidated billing and volume discounts. Shared IAM users don't provide cost separation. Regions don't isolate billing. S3 buckets are storage, not billing structures." },
   { domain: 4, task: "4.2", q: "A company wants to estimate the monthly cost of a new workload consisting of 10 EC2 instances, an RDS database, and 5 TB of S3 storage before deploying. Which tool should they use?", opts: ["AWS Cost Explorer to view projected costs", "AWS Pricing Calculator to model and estimate costs for new workloads", "AWS Budgets to set a spending limit", "AWS Trusted Advisor to check for savings opportunities"], ans: 1, explain: "AWS Pricing Calculator lets you model AWS service configurations and estimate monthly costs before deployment. Cost Explorer shows historical spending, not estimates for new workloads. Budgets track existing spending. Trusted Advisor optimizes existing resources, not future estimates." },
-  { domain: 4, task: "4.3", q: "A company's production system goes down at 2 AM and they need AWS to respond within 15 minutes. Which support plan provides this response time?", opts: ["Developer Support — provides 12-hour response for system impaired cases", "Business Support — provides 1-hour response for production system down", "Enterprise Support — provides less than 15-minute response for business-critical system down", "Basic Support — provides 24-hour response for all cases"], ans: 2, explain: "Enterprise Support guarantees <15 minute response for business-critical (Sev 1) system down cases. Business Support has <1 hour for production down. Developer has <12 hours for system impaired. Basic doesn't provide technical support cases." },
+  { domain: 4, task: "4.3", q: "A company's production system goes down at 2 AM and they need AWS to respond within 15 minutes. Which support plan provides this response time?", opts: ["Developer Support — provides 12-hour response for system impaired cases", "Business Support+ — provides 1-hour response for production system down", "Enterprise Support — provides less than 15-minute response for business-critical system down", "Basic Support — provides 24-hour response for all cases"], ans: 2, explain: "Enterprise Support guarantees less than 15-minute response for business-critical (Sev 1) system down cases. Business Support+ has less than 1-hour response for production down. Developer is slower, and Basic does not provide technical support cases." },
   { domain: 4, task: "4.3", q: "A company wants a designated point of contact at AWS who understands their architecture and provides proactive guidance. Which support feature provides this?", opts: ["AWS Support Center with case management", "A Technical Account Manager (TAM) included with Enterprise Support", "AWS re:Post community forums for expert advice", "AWS IQ for on-demand third-party consultants"], ans: 1, explain: "A TAM is a designated AWS expert who provides proactive architectural guidance and is included with Enterprise Support. Support Center is for filing cases. re:Post is a community forum. AWS IQ connects to third-party freelancers, not AWS staff." },
-  { domain: 4, task: "4.3", q: "A small development team needs technical support for their AWS workloads but cannot justify the cost of Business Support. Which is the most cost-effective support plan that includes technical assistance?", opts: ["Basic Support — includes technical support via email", "Developer Support — provides technical support via email during business hours", "Business Support — the minimum plan with any technical support", "Enterprise On-Ramp — provides cost-effective enterprise-level support"], ans: 1, explain: "Developer Support is the most affordable plan with technical support (email, business hours). Basic only covers billing and account questions. Business Support is more expensive. Enterprise On-Ramp is for larger organizations needing more than Business but less than full Enterprise." },
+  { domain: 4, task: "4.3", q: "A small development team needs technical support for AWS workloads but does not need 24/7 production support. Which plan is the most cost-effective paid option?", opts: ["Basic Support", "Developer Support", "Business Support+", "Enterprise Support"], ans: 1, explain: "Developer Support is the lowest-cost paid plan that includes technical support, making it the best fit for development and test environments." },
   { domain: 4, task: "4.2", q: "A company notices they have multiple idle Elastic IP addresses and underutilized EC2 instances. Which AWS tool provides recommendations to eliminate this waste?", opts: ["AWS Cost Explorer for spending trend analysis", "AWS Trusted Advisor for cost optimization checks including idle resources", "AWS Budgets for setting spending alerts", "AWS CloudWatch for monitoring resource utilization metrics"], ans: 1, explain: "Trusted Advisor includes cost optimization checks that identify idle Elastic IPs, underutilized instances, and other waste. Cost Explorer shows spending trends but doesn't recommend actions. Budgets track spending against thresholds. CloudWatch shows metrics but doesn't provide optimization recommendations." },
   { domain: 4, task: "4.1", q: "A company wants to transfer large amounts of data INTO AWS from the internet. They're concerned about data transfer costs. What should they know?", opts: ["All data transfer into and out of AWS is free", "Data transfer into AWS (ingress) is free; data transfer out (egress) incurs charges", "Data transfer into AWS costs more than data transfer out", "Data transfer is charged equally in both directions at the same rate"], ans: 1, explain: "AWS does not charge for inbound data transfer (ingress) from the internet. Outbound data transfer (egress) is metered and charged. Transfer is not free in both directions. Ingress is not more expensive than egress — it's free. Rates are not equal since ingress is free." },
   { domain: 4, task: "4.2", q: "A finance team wants to see a breakdown of AWS costs by department, project, and environment (dev/staging/prod). What must they implement to enable this reporting?", opts: ["Separate AWS accounts for every combination of department, project, and environment", "Cost allocation tags applied to resources with department, project, and environment keys", "Amazon S3 buckets named by department to track storage costs", "AWS CloudTrail logs filtered by department to estimate usage"], ans: 1, explain: "Cost allocation tags let you categorize resources by custom dimensions (department, project, environment) and filter costs in billing reports. Separate accounts for every combination is impractical. S3 bucket naming doesn't track cross-service costs. CloudTrail logs API activity, not cost attribution." },
-  { domain: 4, task: "4.3", q: "A company wants to use AWS Trusted Advisor but finds that most checks are locked. Which support plan unlocks the full set of Trusted Advisor checks?", opts: ["Basic — all Trusted Advisor checks are available to every customer", "Developer — unlocks security and performance checks", "Business or higher — unlocks the full set of Trusted Advisor checks", "Only Enterprise Support includes Trusted Advisor access"], ans: 2, explain: "Business, Enterprise On-Ramp, and Enterprise Support plans unlock the full set of Trusted Advisor checks. Basic and Developer only get a limited set (core security checks and service quotas). Developer doesn't unlock extra categories. Enterprise isn't the only plan with full access." },
+  { domain: 4, task: "4.3", q: "A company wants to use AWS Trusted Advisor but finds that most checks are locked. Which support plan unlocks the full set of Trusted Advisor checks at the lowest current tier?", opts: ["Basic", "Developer", "Business Support+", "Only Enterprise Support"], ans: 2, explain: "Business Support+ is the minimum current plan that unlocks the full set of Trusted Advisor checks. Enterprise Support and AWS Unified Operations also include full access." },
   { domain: 4, task: "4.1", q: "A company uses Amazon S3 to store data and is surprised by their storage bill. They realize most of their data hasn't been accessed in over a year. Which S3 feature can automatically reduce their costs?", opts: ["S3 Versioning to keep only the latest copy", "S3 Lifecycle policies to automatically transition objects to cheaper storage classes", "S3 Transfer Acceleration to reduce transfer costs", "S3 Object Lock to prevent accidental deletion charges"], ans: 1, explain: "S3 Lifecycle policies automatically move objects to cheaper tiers (Standard-IA, Glacier, Deep Archive) based on age. Versioning keeps multiple copies, increasing costs. Transfer Acceleration speeds uploads but doesn't reduce storage costs. Object Lock prevents deletion but doesn't optimize storage costs." },
   { domain: 4, task: "4.2", q: "A company with 50 AWS accounts wants to receive a single invoice and benefit from volume pricing discounts across all accounts. Which feature enables this?", opts: ["AWS Budgets with consolidated alert notifications", "AWS Organizations consolidated billing for unified invoicing and volume discounts", "AWS Cost Explorer with multi-account views", "Separate invoices with manual aggregation by the finance team"], ans: 1, explain: "Consolidated billing in AWS Organizations combines usage across all accounts into one bill and aggregates for volume discounts. Budgets alert on spending but don't consolidate billing. Cost Explorer visualizes multi-account costs but doesn't provide unified invoicing. Manual aggregation misses volume discounts." },
-  { domain: 4, task: "4.3", q: "A company is planning a major product launch and wants AWS to help them prepare their infrastructure for the expected traffic spike. Which Enterprise Support feature provides this?", opts: ["AWS Trusted Advisor performance checks", "Infrastructure Event Management (IEM) for planned event support", "AWS Personal Health Dashboard notifications", "AWS Support Center priority case routing"], ans: 1, explain: "IEM provides architecture and scaling guidance, operational support, and real-time monitoring during planned events like product launches. Trusted Advisor checks are automated, not event-specific. Health Dashboard shows service events, not proactive planning. Priority routing handles cases faster but isn't event planning." },
+  { domain: 4, task: "4.3", q: "A company is planning a major product launch and wants AWS to help prepare its environment for the expected traffic spike. Which AWS support capability best fits this need?", opts: ["AWS Trusted Advisor performance checks", "AWS Countdown event management", "AWS Health Dashboard notifications", "AWS Support Center case routing"], ans: 1, explain: "AWS Countdown event management provides AWS-led preparation and guidance for planned critical business events such as launches and cutovers." },
   { domain: 4, task: "4.1", q: "A company has Windows Server licenses with Software Assurance and wants to use them on AWS to avoid paying for new licenses. Which EC2 option supports this?", opts: ["On-Demand Instances — AWS handles all licensing automatically", "Dedicated Hosts — bring your own licenses (BYOL) on dedicated physical servers", "Spot Instances — licensing costs are waived for spare capacity", "Reserved Instances — licensing is included in the reservation fee"], ans: 1, explain: "Dedicated Hosts provide visibility into the underlying physical server, allowing customers to use existing per-socket or per-core licenses (BYOL). On-Demand includes license costs in the price. Spot doesn't waive licensing. Reserved Instances include license costs unless used on Dedicated Hosts." },
   { domain: 4, task: "4.2", q: "A company wants to identify and eliminate AWS resources that are provisioned but never used, such as unattached EBS volumes and idle load balancers. Which approach should they use?", opts: ["AWS CloudFormation stack deletion to remove all resources at once", "AWS Trusted Advisor cost optimization checks combined with AWS Cost Explorer analysis", "AWS Config rules to detect unused IAM policies only", "Amazon CloudWatch alarms to monitor every individual resource's CPU", "Amazon Inspector to scan for idle network resources"], ans: 1, explain: "Trusted Advisor flags idle resources (unattached EBS, idle LBs) and Cost Explorer shows spending on unused services. CloudFormation deletion removes everything, not just idle resources. Config tracks configuration, not utilization. CloudWatch alarms per resource is operationally heavy and doesn't identify waste directly." },
   { domain: 4, task: "4.3", q: "A developer needs help with an AWS service but cannot afford a paid support plan. Where can they get technical guidance from the AWS community?", opts: ["AWS Artifact for documentation access", "AWS re:Post — a community-driven Q&A forum for AWS technical questions", "AWS Personal Health Dashboard for service status", "AWS Trusted Advisor for automated recommendations"], ans: 1, explain: "AWS re:Post (formerly AWS Forums) is a free community Q&A platform where developers can ask and answer AWS technical questions. Artifact provides compliance docs. Health Dashboard shows service events. Trusted Advisor provides automated checks, not interactive technical help." },
@@ -1744,12 +1742,12 @@ const DOMAIN4_QUESTIONS = [
   { domain: 4, task: "4.1", q: "A company runs a stable baseline of container workloads every day but also experiences unpredictable traffic spikes during marketing campaigns. Finance wants strong savings without overcommitting all capacity. Which purchasing approaches should the team combine? (Select TWO)", opts: ["Savings Plans for the baseline usage", "On-Demand or Spot capacity for spikes", "Dedicated Hosts for every workload", "All Upfront Reserved Instances for peak traffic only", "Provisioning all peak capacity on-premises instead"], ans: [0, 1], multi: true, explain: "Savings Plans are well suited to predictable baseline compute, while On-Demand or Spot can absorb burst capacity without overcommitting. The other options either reduce flexibility or do not fit the requirement." },
   { domain: 4, task: "4.2", q: "A company wants to understand which departments are driving cloud spend and also receive alerts before any department exceeds its monthly target. Which AWS features should they implement? (Select TWO)", opts: ["Cost allocation tags", "AWS Budgets", "Amazon Inspector", "AWS Artifact", "Amazon Route 53 health checks"], ans: [0, 1], multi: true, explain: "Cost allocation tags let the team attribute spend by department, and AWS Budgets provides threshold alerts for actual or forecasted spending. The other services do not manage billing attribution or budget alerts." },
   { domain: 4, task: "4.2", q: "A company wants detailed billing data delivered for custom analytics in Amazon Athena, while also giving executives a simpler interactive console view of cost trends and forecasts. Which AWS tools support these two needs? (Select TWO)", opts: ["AWS Cost and Usage Report (CUR)", "AWS Cost Explorer", "AWS Trusted Advisor", "AWS Secrets Manager", "Amazon GuardDuty"], ans: [0, 1], multi: true, explain: "CUR provides the granular line-item data needed for custom analytics, and Cost Explorer provides an easier interactive interface for trend and forecast analysis. The other options do not provide billing data analysis for these use cases." },
-  { domain: 4, task: "4.3", q: "A company needs 24/7 access to Cloud Support Engineers for production issues but does not need a dedicated Technical Account Manager. Which support plans satisfy the 24/7 requirement? (Select TWO)", opts: ["Business Support", "Enterprise Support", "Developer Support", "Basic Support", "AWS re:Post only"], ans: [0, 1], multi: true, explain: "Business Support and Enterprise Support both provide 24/7 access to Cloud Support Engineers for production environments. Developer Support is business hours only, and Basic or re:Post do not provide that level of support." },
+  { domain: 4, task: "4.3", q: "A company needs 24/7 access to Cloud Support Engineers for production issues but does not need a designated Technical Account Manager. Which support plans satisfy the 24/7 requirement? (Select TWO)", opts: ["Business Support+", "Enterprise Support", "Developer Support", "Basic Support", "AWS re:Post only"], ans: [0, 1], multi: true, explain: "Business Support+ and Enterprise Support both provide 24/7 access to Cloud Support Engineers for production environments. Developer Support is business hours only, and Basic or re:Post do not provide that level of support." },
   { domain: 4, task: "4.2", q: "A company operating 40 AWS accounts wants one payer account, shared discount benefits, and controls that prevent individual teams from bypassing cost policies. Which AWS capabilities should they use? (Select TWO)", opts: ["AWS Organizations consolidated billing", "Service Control Policies (SCPs)", "Separate standalone payer accounts for each team", "Amazon CloudFront field-level encryption", "AWS Wavelength Zones"], ans: [0, 1], multi: true, explain: "AWS Organizations consolidated billing centralizes invoicing and discount sharing, while SCPs enforce account-level guardrails. Separate payer accounts fragment billing, and the remaining options are unrelated to cost governance." },
   { domain: 4, task: "4.1", q: "A media company stores years of archived footage in Amazon S3 and wants storage costs to decrease automatically as data ages, while keeping retrieval options for occasional audits. Which S3 features should they use? (Select TWO)", opts: ["S3 Lifecycle policies", "S3 Glacier storage classes", "Amazon EBS snapshots only", "S3 Transfer Acceleration", "AWS Shield Standard"], ans: [0, 1], multi: true, explain: "Lifecycle policies can transition older objects automatically, and Glacier storage classes reduce long-term archival cost while preserving retrieval options. The other features do not solve this storage lifecycle requirement." }
   ,
   { domain: 4, task: "4.1", q: "A company wants to optimize AWS compute costs for different workload patterns. One workload is steady and predictable all year, while another is fault tolerant and can be interrupted during off-hours processing. Which purchasing approaches are the best fit? (Select TWO)", opts: ["Savings Plans or Reserved Instances for the steady workload", "Spot Instances for the interruptible workload", "Dedicated Hosts for every cost-sensitive workload", "On-Demand only for every workload regardless of pattern", "Provisioning extra on-premises servers for cheaper cloud billing"], ans: [0, 1], multi: true, explain: "Commitment-based discounts fit steady workloads, and Spot Instances fit interruptible processing. The other options do not align to the workload patterns or cost goal." },
   { domain: 4, task: "4.2", q: "A finance team wants to mature cloud cost management. It needs detailed line-item billing data for custom analytics, a simpler built-in view for trends and forecasts, and proactive alerting when spend is about to exceed a threshold. Which AWS tools should it use? (Select THREE)", opts: ["AWS Cost and Usage Report (CUR)", "AWS Cost Explorer", "AWS Budgets", "Amazon Detective", "AWS Shield Advanced"], ans: [0, 1, 2], multi: true, explain: "CUR provides granular billing data, Cost Explorer provides interactive trend analysis and forecasts, and AWS Budgets provides threshold alerts. The remaining services are security tools, not billing management tools." },
   { domain: 4, task: "4.2", q: "A company with many AWS accounts wants centralized billing, consistent guardrails on what member accounts can do, and cost reporting by team. Which AWS capabilities support those goals? (Select THREE)", opts: ["AWS Organizations consolidated billing", "Service Control Policies (SCPs)", "Cost allocation tags", "Amazon Rekognition", "AWS Glue Studio"], ans: [0, 1, 2], multi: true, explain: "Consolidated billing centralizes charges, SCPs establish account guardrails, and cost allocation tags support team-based reporting. Rekognition and Glue Studio are unrelated." },
-  { domain: 4, task: "4.3", q: "A production operations team needs support options that match a business-critical AWS environment. They want 24/7 access to Cloud Support Engineers, full Trusted Advisor checks, and a designated Technical Account Manager for proactive guidance. Which support choices or features satisfy those needs? (Select THREE)", opts: ["Business Support for 24/7 access to Cloud Support Engineers", "Enterprise Support for a designated Technical Account Manager", "Business Support or higher for the full set of Trusted Advisor checks", "Basic Support for architectural reviews with a TAM", "AWS re:Post as a replacement for a support plan"], ans: [0, 1, 2], multi: true, explain: "Business Support provides 24/7 engineer access, Enterprise Support adds a designated TAM, and full Trusted Advisor checks require Business or higher. Basic and re:Post do not replace those capabilities." }
+  { domain: 4, task: "4.3", q: "A production operations team needs support options that match a business-critical AWS environment. They want 24/7 access to Cloud Support Engineers, full Trusted Advisor checks, and a designated Technical Account Manager for proactive guidance. Which support choices or features satisfy those needs? (Select THREE)", opts: ["Business Support+ for 24/7 access to Cloud Support Engineers", "Enterprise Support for a designated Technical Account Manager", "Business Support+ or higher for the full set of Trusted Advisor checks", "Basic Support for architectural reviews with a TAM", "AWS re:Post as a replacement for a support plan"], ans: [0, 1, 2], multi: true, explain: "Business Support+ provides 24/7 engineer access, Enterprise Support adds a designated TAM, and full Trusted Advisor access starts at Business Support+. Basic Support and re:Post do not replace those capabilities." }
 ];
