@@ -1099,7 +1099,7 @@ function submitMulti() {
       if (correctIndices.includes(i)) el.classList.add('correct');
       if (multiSelections.includes(i) && !correctIndices.includes(i)) el.classList.add('wrong');
     });
-  });
+  }
 
   const counted = scoredQuestionIndices.has(current);
   if (!isCorrect) {
