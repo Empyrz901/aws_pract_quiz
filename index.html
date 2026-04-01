@@ -939,11 +939,35 @@ function shouldRevealAnswersDuringQuiz() {
   return !officialSimulation;
 }
 
+function buildStoredResponse(q, picks, counted) {
+  const normalizedPicks = Array.isArray(picks) ? [...picks] : [];
+  const correctIndices = q.multi ? [...q.ans] : [q.ans];
+  const sortedPicks = [...normalizedPicks].sort((a, b) => a - b);
+  const sortedCorrect = [...correctIndices].sort((a, b) => a - b);
+  const isCorrect = sortedPicks.length === sortedCorrect.length && sortedPicks.every((v, i) => v === sortedCorrect[i]);
+  const skipped = normalizedPicks.length === 0;
+  return {
+    q: q.q,
+    correct: skipped ? false : isCorrect,
+    yourAnswer: skipped ? 'Skipped' : normalizedPicks.map(i => q.opts[i]).join(', '),
+    rightAnswer: correctIndices.map(i => q.opts[i]).join(', '),
+    explain: q.explain,
+    _picks: normalizedPicks,
+    _counted: counted
+  };
+}
+
+function persistOfficialResponse(picks) {
+  const normalizedPicks = Array.isArray(picks) ? [...picks] : [];
+  results[current] = buildStoredResponse(quiz[current], normalizedPicks, scoredQuestionIndices.has(current));
+}
+
 function renderQuestion() {
   const q = quiz[current];
-  const alreadyAnswered = results[current] !== null;
-  answered = alreadyAnswered;
-  multiSelections = [];
+  const storedResponse = results[current];
+  const alreadyAnswered = storedResponse !== null;
+  answered = officialSimulation ? false : alreadyAnswered;
+  multiSelections = storedResponse && Array.isArray(storedResponse._picks) ? [...storedResponse._picks] : [];
   document.getElementById('s-question').textContent = `${current+1}/${quiz.length}`;
   document.getElementById('s-correct').textContent = officialSimulation ? '-' : score;
   document.getElementById('s-wrong').textContent = officialSimulation ? '-' : wrong;
@@ -978,12 +1002,15 @@ function renderQuestion() {
     const r = results[current];
     const pickedIndices = r && Array.isArray(r._picks) ? r._picks : [];
     optEls.forEach(el => {
-      el.classList.add('disabled');
       const i = parseInt(el.dataset.idx);
       if (pickedIndices.includes(i)) el.classList.add('picked');
     });
 
-    if (shouldRevealAnswersDuringQuiz()) {
+    if (officialSimulation) {
+      exp.classList.remove('show');
+      exp.textContent = '';
+    } else if (shouldRevealAnswersDuringQuiz()) {
+      optEls.forEach(el => el.classList.add('disabled'));
       const correctIndices = isMulti ? q.ans : [q.ans];
       optEls.forEach(el => {
         const i = parseInt(el.dataset.idx);
@@ -1007,7 +1034,9 @@ function renderQuestion() {
   document.getElementById('btn-prev').classList.toggle('hidden', current === 0);
   document.getElementById('btn-submit').classList.add('hidden');
   document.getElementById('btn-next').classList.remove('hidden');
-  if (alreadyAnswered) {
+  if (officialSimulation) {
+    document.getElementById('btn-next').textContent = current < quiz.length - 1 ? 'Next' : 'Finish Exam';
+  } else if (alreadyAnswered) {
     document.getElementById('btn-next').textContent = current < quiz.length - 1 ? 'Next' : 'See Results';
   } else {
     document.getElementById('btn-next').textContent = current < quiz.length - 1 ? 'Next' : 'Finish';
@@ -1017,6 +1046,29 @@ function renderQuestion() {
 function selectOption(idx) {
   if (answered) return;
   const q = quiz[current];
+
+  if (officialSimulation) {
+    if (!q.multi) {
+      multiSelections = [idx];
+    } else {
+      const requiredCount = q.ans.length;
+      const pos = multiSelections.indexOf(idx);
+      if (pos > -1) {
+        multiSelections.splice(pos, 1);
+      } else {
+        if (multiSelections.length >= requiredCount) return;
+        multiSelections.push(idx);
+      }
+    }
+
+    const optEls = document.querySelectorAll('.option');
+    optEls.forEach(el => {
+      const i = parseInt(el.dataset.idx);
+      el.classList.toggle('picked', multiSelections.includes(i));
+    });
+    persistOfficialResponse(multiSelections);
+    return;
+  }
 
   // Single-answer: evaluate immediately
   if (!q.multi) {
@@ -1174,12 +1226,20 @@ ${q.explain}
 }
 
 function showResults() {
-  // Mark any unanswered questions as skipped
-  results.forEach((r, i) => {
-    if (r === null) {
-      results[i] = { q: quiz[i].q, correct: false, yourAnswer: 'Skipped', rightAnswer: (quiz[i].multi ? quiz[i].ans : [quiz[i].ans]).map(j => quiz[i].opts[j]).join(', '), explain: quiz[i].explain, _picks: [] };
-    }
-  });
+  if (officialSimulation) {
+    results = quiz.map((q, i) => {
+      const stored = results[i];
+      const picks = stored && Array.isArray(stored._picks) ? stored._picks : [];
+      return buildStoredResponse(q, picks, scoredQuestionIndices.has(i));
+    });
+  } else {
+    // Mark any unanswered questions as skipped
+    results.forEach((r, i) => {
+      if (r === null) {
+        results[i] = buildStoredResponse(quiz[i], [], scoredQuestionIndices.has(i));
+      }
+    });
+  }
   const isCounted = (i) => scoredQuestionIndices.has(i);
   score = results.filter((r, i) => r.correct && isCounted(i)).length;
   wrong = results.filter((r, i) => !r.correct && isCounted(i)).length;
