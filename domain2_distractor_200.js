@@ -71,7 +71,7 @@ function generateDomain2DistractorQuestions() {
         "AWS Shield Advanced with proactive engagement",
         "AWS WAF with AWS Managed Rules",
         "Amazon GuardDuty with malware protection",
-        "AWS Network Firewall with Suricata rules"
+        "AWS Firewall Manager with centralized policy administration"
       ],
       correct: "AWS WAF with AWS Managed Rules",
       nextBest: "AWS Shield Advanced with proactive engagement",
@@ -284,7 +284,7 @@ function generateDomain2DistractorQuestions() {
         "AWS Config periodic snapshots with manual review"
       ],
       correct: "AWS Config encrypted-volumes rule with auto-remediation",
-      nextBest: "Enable EBS encryption by default only",
+      nextBest: "Enable EBS encryption by default",
       whyCorrect: "Config with remediation enforces continuous compliance and can correct drift on existing resources.",
       whyNextBestWrong: "Encryption by default covers new volumes but does not remediate existing unencrypted volumes."
     },
