@@ -223,6 +223,88 @@ const RAW_QUESTIONS = [
   ...DOMAIN4_DISTRACTOR_QUESTIONS.map((q) => ({ ...q, _bank: 'distractor' }))
 ];
 
+const OPTION_LABEL_EXCEPTIONS = new Set([
+  'Amazon RDS for MySQL',
+  'Amazon RDS for PostgreSQL',
+  'Amazon RDS for MariaDB',
+  'Amazon RDS for Oracle',
+  'Amazon RDS for SQL Server',
+  'Amazon Aurora PostgreSQL-Compatible Edition',
+  'Amazon Aurora MySQL-Compatible Edition',
+  'Amazon FSx for Windows File Server',
+  'Amazon FSx for Lustre'
+]);
+
+const OPTION_HINT_SEPARATORS = [
+  ' integrated with ',
+  ' queried in ',
+  ' queried via ',
+  ' used for ',
+  ' designed for ',
+  ' built for ',
+  ' for ',
+  ' with ',
+  ' to ',
+  ' via ',
+  ' using '
+];
+
+function sanitizeAwsOptionLabel(text) {
+  const trimmed = (text || '').trim();
+  if (!trimmed || OPTION_LABEL_EXCEPTIONS.has(trimmed)) return trimmed;
+  if (!/^(Amazon|AWS)\b/.test(trimmed)) return trimmed;
+
+  for (const separator of OPTION_HINT_SEPARATORS) {
+    const idx = trimmed.indexOf(separator);
+    if (idx === -1) continue;
+    const tail = trimmed.slice(idx + separator.length).trim();
+    if (!tail || !/^[a-z]/.test(tail)) continue;
+
+    const candidate = trimmed.slice(0, idx).trim();
+    if (candidate && !OPTION_LABEL_EXCEPTIONS.has(candidate)) return candidate;
+  }
+
+  return trimmed;
+}
+
+function sanitizeQuestionOptionHints(questions) {
+  let changedQuestions = 0;
+  let changedOptions = 0;
+  let collisionSkips = 0;
+
+  const cleaned = questions.map((q) => {
+    if (!q || !Array.isArray(q.opts)) return q;
+
+    let localChanges = 0;
+    const nextOpts = q.opts.map((opt) => {
+      const cleanedOpt = sanitizeAwsOptionLabel(opt);
+      if (cleanedOpt !== opt) localChanges++;
+      return cleanedOpt;
+    });
+
+    if (!localChanges) return q;
+
+    const normalized = nextOpts.map((opt) => normalizeQuestionText(opt));
+    if (new Set(normalized).size !== nextOpts.length) {
+      collisionSkips++;
+      return q;
+    }
+
+    changedQuestions++;
+    changedOptions += localChanges;
+    return { ...q, opts: nextOpts };
+  });
+
+  return {
+    cleaned,
+    report: {
+      changedQuestions,
+      changedOptions,
+      collisionSkips
+    }
+  };
+}
+
 function normalizeQuestionText(text) {
   return (text || '').toLowerCase().replace(/\s+/g, ' ').trim();
 }
@@ -359,7 +441,8 @@ function auditAndFilterQuestions(questions) {
   return { cleaned, flagged, report };
 }
 
-const QUESTION_AUDIT = auditAndFilterQuestions(RAW_QUESTIONS);
+const OPTION_HINT_AUDIT = sanitizeQuestionOptionHints(RAW_QUESTIONS);
+const QUESTION_AUDIT = auditAndFilterQuestions(OPTION_HINT_AUDIT.cleaned);
 const ALL_QUESTIONS = QUESTION_AUDIT.cleaned;
 
 const DOMAIN_NAMES = {
@@ -395,6 +478,7 @@ const OFFICIAL_EXAM_EXCLUDED_TERMS = [
 ];
 
 document.getElementById('all-count').textContent = `${ALL_QUESTIONS.length} Q`;
+console.log('Option hint cleanup report:', OPTION_HINT_AUDIT.report);
 console.log('Question audit report:', QUESTION_AUDIT.report);
 
 function selectDomain(btn) {
