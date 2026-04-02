@@ -267,6 +267,18 @@ function sanitizeAwsOptionLabel(text) {
   return trimmed;
 }
 
+function sanitizeEmDashOptionLabel(text) {
+  const trimmed = (text || '').trim();
+  const dashIdx = trimmed.indexOf(' — ');
+  if (dashIdx === -1) return trimmed;
+
+  const candidate = trimmed.slice(0, dashIdx).trim();
+  const tail = trimmed.slice(dashIdx + 3).trim();
+  if (!candidate || !tail) return trimmed;
+
+  return candidate;
+}
+
 function sanitizeQuestionOptionHints(questions) {
   let changedQuestions = 0;
   let changedOptions = 0;
@@ -277,7 +289,7 @@ function sanitizeQuestionOptionHints(questions) {
 
     let localChanges = 0;
     const nextOpts = q.opts.map((opt) => {
-      const cleanedOpt = sanitizeAwsOptionLabel(opt);
+      const cleanedOpt = sanitizeEmDashOptionLabel(sanitizeAwsOptionLabel(opt));
       if (cleanedOpt !== opt) localChanges++;
       return cleanedOpt;
     });
