@@ -40,7 +40,7 @@ function generateDomain2DistractorQuestions() {
       task: "2.2",
       buildQuestion: (company, constraint) => `${company} runs 40 AWS accounts and needs a landing zone with guardrails, centralized logging, and standardized account provisioning. The CIO insists on a path that delivers ${constraint}. Which service should the team adopt first?`,
       options: [
-        "AWS Organizations with Service Control Policies and custom account vending",
+        "AWS Organizations with Service Control Policies and custom account provisioning",
         "AWS Control Tower",
         "AWS Security Hub with centralized findings",
         "AWS Config conformance packs with StackSets"
@@ -82,7 +82,7 @@ function generateDomain2DistractorQuestions() {
       task: "2.2",
       buildQuestion: (company, constraint) => `${company} must encrypt S3 and EBS data with keys they control to satisfy internal compliance policy. The security manager demands ${constraint}. Which choice is most appropriate?`,
       options: [
-        "AWS managed service encryption keys with default key policies",
+        "AWS managed keys enabled for each service",
         "AWS KMS customer managed keys with automatic rotation",
         "Self-managed key servers on Amazon EC2 with custom backup scripts",
         "AWS CloudHSM-backed custom key store for every workload"
@@ -96,7 +96,7 @@ function generateDomain2DistractorQuestions() {
       task: "2.3",
       buildQuestion: (company, constraint) => `${company} wants employees to use corporate directory credentials for AWS access across many accounts without creating IAM users per person. The requirement is ${constraint}. Which solution should be used?`,
       options: [
-        "IAM users synchronized from Active Directory by lifecycle automation scripts",
+        "IAM users provisioned from Active Directory by automation",
         "AWS IAM Identity Center integrated with the corporate directory",
         "Amazon Cognito user pools with SAML federation",
         "Cross-account administrator roles assumed from a shared IAM user"
@@ -279,9 +279,9 @@ function generateDomain2DistractorQuestions() {
       buildQuestion: (company, constraint) => `${company} needs all current and future EBS volumes encrypted and wants noncompliant volumes automatically corrected. Operations has a hard requirement for ${constraint}. Which option is best?`,
       options: [
         "AWS Config encrypted-volumes rule with auto-remediation",
-        "Enable EBS encryption by default only",
-        "Quarterly manual audit scripts",
-        "CloudTrail alerts on CreateVolume events"
+        "Enable EBS encryption by default",
+        "AWS Security Hub with an encryption control",
+        "AWS Config periodic snapshots with manual review"
       ],
       correct: "AWS Config encrypted-volumes rule with auto-remediation",
       nextBest: "Enable EBS encryption by default only",
@@ -307,9 +307,9 @@ function generateDomain2DistractorQuestions() {
       buildQuestion: (company, constraint) => `${company} wants safeguards so KMS keys cannot be deleted immediately and changes remain auditable. The policy objective is ${constraint}. Which option is most suitable?`,
       options: [
         "Use key policies to restrict kms:ScheduleKeyDeletion and require the KMS waiting period",
-        "Move all keys to self-managed HSM clusters immediately",
-        "Disable CloudTrail for key operations to reduce noise",
-        "Rotate KMS keys daily by manual process"
+        "Use an SCP to block deletion of all KMS keys in the account",
+        "Create EventBridge alerts for KMS key changes",
+        "Move selected workloads to a CloudHSM custom key store"
       ],
       correct: "Use key policies to restrict kms:ScheduleKeyDeletion and require the KMS waiting period",
       nextBest: "Move all keys to self-managed HSM clusters immediately",
