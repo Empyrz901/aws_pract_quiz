@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://empyrz901.github.io/aws_pract_quiz/data/expert/question.schema.json",
+  "title": "CLF-C02 Expert Question",
+  "type": "object",
+  "required": [
+    "id",
+    "exam",
+    "level",
+    "domain",
+    "task",
+    "style",
+    "difficulty",
+    "scenario",
+    "options",
+    "answer",
+    "aws_docs",
+    "generation",
+    "quality",
+    "ui"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "exam": { "type": "string", "const": "CLF-C02" },
+    "level": { "type": "string", "const": "expert" },
+    "domain": { "type": "integer", "minimum": 1, "maximum": 4 },
+    "task": { "type": "string" },
+    "style": { "type": "string", "enum": ["scenario"] },
+    "difficulty": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "scenario": {
+      "type": "object",
+      "required": ["title", "stem", "business_context", "constraints"],
+      "properties": {
+        "title": { "type": "string" },
+        "stem": { "type": "string" },
+        "business_context": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "options": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "is_correct", "rationale"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "is_correct": { "type": "boolean" },
+          "rationale": { "type": "string" }
+        }
+      }
+    },
+    "answer": {
+      "type": "object",
+      "required": ["correct_option_ids", "explanation", "why_others_fail"],
+      "properties": {
+        "correct_option_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "explanation": { "type": "string" },
+        "why_others_fail": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "aws_docs": {
+      "type": "object",
+      "required": ["sources", "deep_dive_primary_url", "deep_dive_sections"],
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["service", "doc_type", "url", "section_titles", "snippet_markdown"],
+            "properties": {
+              "service": { "type": "string" },
+              "doc_type": { "type": "string" },
+              "url": { "type": "string" },
+              "section_titles": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "snippet_markdown": { "type": "string" }
+            }
+          }
+        },
+        "deep_dive_primary_url": { "type": "string" },
+        "deep_dive_sections": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "generation": {
+      "type": "object",
+      "required": ["template_id", "variant_key", "generated_at", "generator_version", "review_status"],
+      "properties": {
+        "template_id": { "type": "string" },
+        "variant_key": { "type": "string" },
+        "generated_at": { "type": "string" },
+        "generator_version": { "type": "string" },
+        "review_status": { "type": "string" }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": ["distractor_rule", "anti_patterns_checked"],
+      "properties": {
+        "distractor_rule": { "type": "string" },
+        "anti_patterns_checked": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "required": ["deep_dive_enabled", "flaggable"],
+      "properties": {
+        "deep_dive_enabled": { "type": "boolean" },
+        "flaggable": { "type": "boolean" }
+      }
+    }
+  }
+}

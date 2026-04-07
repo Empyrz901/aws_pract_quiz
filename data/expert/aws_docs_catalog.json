@@ -1,0 +1,62 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-04-07",
+  "sources": {
+    "well_architected_tool_intro": {
+      "service": "AWS Well-Architected Tool",
+      "doc_type": "best_practices",
+      "url": "https://docs.aws.amazon.com/wellarchitected/latest/userguide/intro.html",
+      "section_titles": ["What is AWS Well-Architected Tool?"],
+      "snippet_markdown": "AWS WA Tool provides a consistent process for measuring your architecture using AWS best practices. It helps teams document decisions, get recommendations, and make workloads more reliable, secure, efficient, and cost-effective."
+    },
+    "artifact_agreements": {
+      "service": "AWS Artifact",
+      "doc_type": "compliance",
+      "url": "https://docs.aws.amazon.com/artifact/latest/ug/managing-agreements.html",
+      "section_titles": ["Managing agreements in AWS Artifact"],
+      "snippet_markdown": "You can use AWS Artifact to review and manage agreements for your AWS account or organization. Companies subject to HIPAA typically require a Business Associate Addendum (BAA), and organizations can accept agreements on behalf of member accounts."
+    },
+    "cloudwatch_logs_intro": {
+      "service": "Amazon CloudWatch Logs",
+      "doc_type": "best_practices",
+      "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html",
+      "section_titles": ["What is Amazon CloudWatch Logs?", "Features"],
+      "snippet_markdown": "CloudWatch Logs enables you to centralize logs from systems, applications, and AWS services in a single, highly scalable service. You can view, search, filter, archive, and query log data with CloudWatch Logs Insights."
+    },
+    "lambda_best_practices": {
+      "service": "AWS Lambda",
+      "doc_type": "best_practices",
+      "url": "https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html",
+      "section_titles": ["Function configuration", "Security best practices"],
+      "snippet_markdown": "To find the right memory configuration, AWS recommends performance testing and reviewing REPORT metrics such as Max Memory Used. AWS also recommends most-restrictive IAM permissions and understanding Lambda quotas before choosing the service for a workload."
+    },
+    "ecs_service_quotas": {
+      "service": "Amazon ECS",
+      "doc_type": "service_quotas",
+      "url": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-quotas.html",
+      "section_titles": ["Amazon ECS service quotas"],
+      "snippet_markdown": "Amazon ECS applies default per-Region quotas. If you exceed a quota, the request fails, so teams should review quotas in advance and request increases before they are needed."
+    },
+    "budgets_best_practices": {
+      "service": "AWS Budgets",
+      "doc_type": "best_practices",
+      "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-best-practices.html",
+      "section_titles": ["Best practices for AWS Budgets", "Setting budget alerts"],
+      "snippet_markdown": "AWS Budgets best practices cover setting budgets, understanding update frequency, and configuring alerts or actions. Budget actions also require the right IAM and notification permissions to execute as intended."
+    },
+    "cost_explorer_intro": {
+      "service": "AWS Cost Explorer",
+      "doc_type": "best_practices",
+      "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html",
+      "section_titles": ["Analyzing your costs and usage with AWS Cost Explorer"],
+      "snippet_markdown": "AWS Cost Explorer lets you view and analyze cost and usage, look back up to 13 months, forecast up to 18 months, and identify trends that need further inquiry. Cost data refreshes at least once every 24 hours."
+    },
+    "support_plans_intro": {
+      "service": "AWS Support Plans",
+      "doc_type": "best_practices",
+      "url": "https://docs.aws.amazon.com/awssupport/latest/user/aws-support-plans.html",
+      "section_titles": ["AWS Support Plans", "Features of AWS Support Plans"],
+      "snippet_markdown": "AWS offers Basic, AWS Business Support+, AWS Enterprise Support, and AWS Unified Operations. Basic includes account and billing help plus service quota increases, while higher-tier plans add technical case support and faster expert access."
+    }
+  }
+}

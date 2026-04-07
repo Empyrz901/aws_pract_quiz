@@ -1,0 +1,182 @@
+[
+  {
+    "id": "clf-d1-t1.2-wa-tool-governance-001",
+    "exam": "CLF-C02",
+    "level": "expert",
+    "domain": 1,
+    "task": "1.2",
+    "style": "scenario",
+    "difficulty": 4,
+    "scenario": {
+      "title": "Architecture review before launch",
+      "stem": "A SaaS vendor is preparing a major product launch and wants architects from several teams to evaluate the workload against AWS best practices before go-live. Leadership also wants the review process to document design decisions and consistently expose reliability, security, and cost risks across releases. The team wants a repeatable cloud-native review process rather than an informal spreadsheet exercise. Which AWS service is the best fit?",
+      "business_context": [
+        "cross-team launch review",
+        "documented architecture decisions",
+        "repeatable governance before release"
+      ],
+      "constraints": [
+        "consistent best-practice reviews",
+        "decision tracking",
+        "low-friction governance"
+      ]
+    },
+    "options": [
+      {
+        "id": "A",
+        "label": "AWS Well-Architected Tool",
+        "is_correct": true,
+        "rationale": "It is designed to measure workloads against AWS best practices and document review decisions."
+      },
+      {
+        "id": "B",
+        "label": "AWS Trusted Advisor",
+        "is_correct": false,
+        "rationale": "It provides checks and recommendations, but it is not the primary workload review workflow for documenting architecture decisions."
+      },
+      {
+        "id": "C",
+        "label": "AWS Artifact",
+        "is_correct": false,
+        "rationale": "It provides compliance documents and agreements, not architecture review guidance."
+      },
+      {
+        "id": "D",
+        "label": "AWS CloudFormation",
+        "is_correct": false,
+        "rationale": "It defines infrastructure as code, but it does not run Well-Architected reviews."
+      }
+    ],
+    "answer": {
+      "correct_option_ids": ["A"],
+      "explanation": "AWS Well-Architected Tool is the best fit because it provides a structured way to review workloads against AWS best practices, capture decisions, and identify areas for improvement before launch.",
+      "why_others_fail": [
+        "Trusted Advisor is useful for checks, but it is not the main architecture review workflow.",
+        "Artifact is for compliance reports and agreements, not architecture measurement.",
+        "CloudFormation automates deployment, but it does not assess design quality."
+      ]
+    },
+    "aws_docs": {
+      "sources": [
+        {
+          "service": "AWS Well-Architected Tool",
+          "doc_type": "best_practices",
+          "url": "https://docs.aws.amazon.com/wellarchitected/latest/userguide/intro.html",
+          "section_titles": ["What is AWS Well-Architected Tool?"],
+          "snippet_markdown": "AWS WA Tool provides a consistent process for measuring your architecture using AWS best practices. It helps teams document decisions, get recommendations, and make workloads more reliable, secure, efficient, and cost-effective."
+        }
+      ],
+      "deep_dive_primary_url": "https://docs.aws.amazon.com/wellarchitected/latest/userguide/intro.html",
+      "deep_dive_sections": ["What is AWS Well-Architected Tool?"]
+    },
+    "generation": {
+      "template_id": "d1_well_architected_governance",
+      "variant_key": "saas-launch-repeatable-review",
+      "generated_at": "2026-04-07",
+      "generator_version": "1.0.0",
+      "review_status": "reviewed"
+    },
+    "quality": {
+      "distractor_rule": "All distractors are real AWS services that miss the review-governance requirement.",
+      "anti_patterns_checked": [
+        "no definition wording",
+        "no hint-heavy answer labels",
+        "all distractors are plausible but fail one requirement"
+      ]
+    },
+    "ui": {
+      "deep_dive_enabled": true,
+      "flaggable": true
+    }
+  },
+  {
+    "id": "clf-d1-t1.2-wa-tool-custom-lens-002",
+    "exam": "CLF-C02",
+    "level": "expert",
+    "domain": 1,
+    "task": "1.2",
+    "style": "scenario",
+    "difficulty": 4,
+    "scenario": {
+      "title": "Governance with custom review criteria",
+      "stem": "A manufacturing enterprise wants platform teams to assess workloads against AWS best practices, but it also needs an internal governance checklist layered on top of those standard reviews. Architects want one place to measure workloads, capture answers, and extend the guidance with organization-specific review questions. The program manager wants this process to stay consistent across the product lifecycle. Which AWS service is the best fit?",
+      "business_context": [
+        "enterprise governance",
+        "shared review workflow",
+        "organization-specific architecture checks"
+      ],
+      "constraints": [
+        "consistent review process",
+        "custom best-practice extensions",
+        "lifecycle-wide use"
+      ]
+    },
+    "options": [
+      {
+        "id": "A",
+        "label": "AWS Well-Architected Tool",
+        "is_correct": true,
+        "rationale": "It supports AWS best-practice reviews and custom lenses for organization-specific questions."
+      },
+      {
+        "id": "B",
+        "label": "AWS Support Center",
+        "is_correct": false,
+        "rationale": "It is for support cases, not architecture evaluation workflows."
+      },
+      {
+        "id": "C",
+        "label": "Amazon CloudWatch",
+        "is_correct": false,
+        "rationale": "It monitors workloads, but it does not provide architecture review questionnaires or lenses."
+      },
+      {
+        "id": "D",
+        "label": "AWS Cost Explorer",
+        "is_correct": false,
+        "rationale": "It analyzes spend trends, not architecture quality."
+      }
+    ],
+    "answer": {
+      "correct_option_ids": ["A"],
+      "explanation": "AWS Well-Architected Tool is the best fit because it supports standardized workload reviews and can be extended with custom lenses for organization-specific governance.",
+      "why_others_fail": [
+        "Support Center helps with support interactions, not design reviews.",
+        "CloudWatch is an observability service, not an architecture review framework.",
+        "Cost Explorer is for spend analysis, not workload governance."
+      ]
+    },
+    "aws_docs": {
+      "sources": [
+        {
+          "service": "AWS Well-Architected Tool",
+          "doc_type": "best_practices",
+          "url": "https://docs.aws.amazon.com/wellarchitected/latest/userguide/intro.html",
+          "section_titles": ["What is AWS Well-Architected Tool?"],
+          "snippet_markdown": "You can use AWS WA Tool to document and measure your workload using the best practices from the AWS Well-Architected Framework. You can also use custom lenses to tailor review questions to your own governance needs."
+        }
+      ],
+      "deep_dive_primary_url": "https://docs.aws.amazon.com/wellarchitected/latest/userguide/intro.html",
+      "deep_dive_sections": ["What is AWS Well-Architected Tool?"]
+    },
+    "generation": {
+      "template_id": "d1_well_architected_governance",
+      "variant_key": "custom-lens-governance",
+      "generated_at": "2026-04-07",
+      "generator_version": "1.0.0",
+      "review_status": "reviewed"
+    },
+    "quality": {
+      "distractor_rule": "All distractors are real AWS services that are close to operations or cost management but not architecture review tooling.",
+      "anti_patterns_checked": [
+        "no definition wording",
+        "no hint-heavy answer labels",
+        "all distractors are plausible but fail one requirement"
+      ]
+    },
+    "ui": {
+      "deep_dive_enabled": true,
+      "flaggable": true
+    }
+  }
+]

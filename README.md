@@ -13,15 +13,18 @@ This is a static, single-page web application with a **2,582-question bank** and
 ## Features
 
 - **2,582 questions in source bank; 1,497 questions in active audited pool**
+- **Expert bank support** via JSON manifests in `data/expert/`
 - **Single-answer and multi-answer** question types (Select TWO / Select THREE)
 - **Scenario-based questions** with business context - not just "What is X?" trivia
 - **Weighted exam mode** - selecting 65 questions draws proportionally by official domain weights
 - **Shuffle toggle** - randomize question order or go sequentially
+- **Question bank switcher** - choose between the standard audited bank and the docs-backed expert bank
 - **Domain filtering** - practice a specific domain or all at once
 - **Question count options** - 10, 20, 30, 50, 65 (official length), 100, or all
 - **Timer** - tracks how long you spend on each quiz session
 - **Previous / Next navigation** - move freely between questions, revisit answered ones
 - **Detailed explanations** - every question explains why the correct answer is right and why distractors are wrong
+- **Deep Dive panel** - after answering a non-official question, open the stored AWS Docs markdown snippet backing the correct answer
 - **Results breakdown** - per-domain scoring and performance review
 - **Official simulation scoring mode** - selecting 65 questions in All Domains uses weighted hard-question sampling and reports results on 50 scored questions (15 unscored)
 - **Retry wrong only** - re-quiz just the questions you got wrong
@@ -53,9 +56,48 @@ When you select "65 (official length)" with "All Domains", the quiz uses a **wei
 |- domain3_distractor_200.js  # Added advanced Domain 3 scenario bank
 |- domain4.js          # Domain 4 questions - Billing, Pricing & Support
 |- domain4_distractor_200.js  # Added advanced Domain 4 scenario bank
+|- data/expert/        # Expert manifest schema, docs catalog, templates, and seed bank
+|- scripts/question_generator.py  # Template-based generator for docs-backed expert questions
 |- README.md           # This file
-`- AWS_Cloud_Practitioner_CLF-C02_Questions.md  # Reference question source
+`- scripts/            # Question generator and quality audit scripts
 ```
+
+### Expert Manifest Format
+
+The expert bank uses JSON manifests instead of inline JS arrays. Each manifest entry stores:
+
+- scenario metadata
+- real AWS service distractors
+- answer rationale
+- AWS documentation source URLs
+- stored markdown snippets for the **Deep Dive** panel
+
+See:
+
+- `data/expert/question.schema.json`
+- `data/expert/aws_docs_catalog.json`
+- `data/expert/templates.json`
+
+### Generating Expert Questions
+
+Generate docs-backed expert manifests from the template system:
+
+```bash
+python3 scripts/question_generator.py --count 40
+```
+
+Or generate into a custom output directory:
+
+```bash
+python3 scripts/question_generator.py --count 100 --out-dir data/expert/generated
+```
+
+The generator uses:
+
+- `data/expert/templates.json` for scenario templates
+- `data/expert/aws_docs_catalog.json` for official AWS documentation metadata and stored snippets
+
+Because this site is static, the browser renders stored doc snippets from the manifest for the **Deep Dive** experience instead of calling MCP live from the page.
 
 ### Question Format
 
@@ -157,7 +199,5 @@ Found an error in a question? Use the **Report error** button during the quiz, o
 ## License
 
 This project is for educational purposes. AWS service names and trademarks belong to Amazon Web Services, Inc.
-
-
 
 

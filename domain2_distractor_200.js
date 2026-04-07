@@ -139,12 +139,12 @@ function generateDomain2DistractorQuestions() {
       buildQuestion: (company, constraint) => `${company} must quickly provide SOC and ISO compliance reports to external auditors. The compliance office requests ${constraint}. Which AWS service should be used?`,
       options: [
         "AWS Artifact",
-        "AWS Audit Manager with delegated evidence collection",
-        "AWS Security Hub standards reports",
-        "AWS Config conformance packs"
+        "AWS Audit Manager",
+        "AWS Security Hub",
+        "AWS Config"
       ],
       correct: "AWS Artifact",
-      nextBest: "AWS Audit Manager with delegated evidence collection",
+      nextBest: "AWS Audit Manager",
       whyCorrect: "Artifact is the direct self-service source for AWS compliance reports and agreements.",
       whyNextBestWrong: "Audit Manager helps gather customer evidence but is not the primary source for AWS-issued compliance reports."
     },

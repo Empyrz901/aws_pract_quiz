@@ -1,0 +1,182 @@
+[
+  {
+    "id": "clf-d4-t4.1-budgets-guardrails-001",
+    "exam": "CLF-C02",
+    "level": "expert",
+    "domain": 4,
+    "task": "4.1",
+    "style": "scenario",
+    "difficulty": 4,
+    "scenario": {
+      "title": "Proactive spend guardrails",
+      "stem": "A logistics software company has had several surprise cloud-spend spikes after development teams launched temporary resources and forgot to remove them. Finance wants proactive alerts and optional automated actions when spending crosses thresholds, instead of waiting for end-of-month review. The director wants enforceable budget guardrails rather than just another dashboard. Which AWS service is the best fit?",
+      "business_context": [
+        "surprise spend spikes",
+        "finance-led cost controls",
+        "threshold-based response"
+      ],
+      "constraints": [
+        "proactive alerts",
+        "possible automated actions",
+        "governed cost controls"
+      ]
+    },
+    "options": [
+      {
+        "id": "A",
+        "label": "AWS Budgets",
+        "is_correct": true,
+        "rationale": "It supports budgets, alerts, and budget actions around thresholds."
+      },
+      {
+        "id": "B",
+        "label": "AWS Cost Explorer",
+        "is_correct": false,
+        "rationale": "It is strong for analysis and forecasting, but it is not the primary service for threshold alerts and budget actions."
+      },
+      {
+        "id": "C",
+        "label": "AWS Pricing Calculator",
+        "is_correct": false,
+        "rationale": "It estimates future architecture cost, but it does not monitor live thresholds."
+      },
+      {
+        "id": "D",
+        "label": "Amazon CloudWatch Logs",
+        "is_correct": false,
+        "rationale": "It stores logs, not budget thresholds."
+      }
+    ],
+    "answer": {
+      "correct_option_ids": ["A"],
+      "explanation": "AWS Budgets is the best fit because it is built for threshold-based budget alerts and budget actions, which directly addresses proactive cost guardrails.",
+      "why_others_fail": [
+        "Cost Explorer helps analyze and forecast spend, but it is not the main threshold-guardrail service.",
+        "Pricing Calculator estimates proposed architectures rather than enforcing live spend controls.",
+        "CloudWatch Logs is unrelated to billing guardrails."
+      ]
+    },
+    "aws_docs": {
+      "sources": [
+        {
+          "service": "AWS Budgets",
+          "doc_type": "best_practices",
+          "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-best-practices.html",
+          "section_titles": ["Best practices for AWS Budgets", "Setting budget alerts"],
+          "snippet_markdown": "AWS Budgets best practices include setting budgets, understanding update frequency, and configuring budget alerts and actions. Budget actions also depend on the right IAM and notification permissions to run as intended."
+        }
+      ],
+      "deep_dive_primary_url": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-best-practices.html",
+      "deep_dive_sections": ["Best practices for AWS Budgets", "Setting budget alerts"]
+    },
+    "generation": {
+      "template_id": "d4_budgets_guardrails",
+      "variant_key": "threshold-guardrails-finance",
+      "generated_at": "2026-04-07",
+      "generator_version": "1.0.0",
+      "review_status": "reviewed"
+    },
+    "quality": {
+      "distractor_rule": "All distractors are real AWS cost or observability services that miss the alert-and-action requirement.",
+      "anti_patterns_checked": [
+        "no definition wording",
+        "no hint-heavy answer labels",
+        "all distractors are plausible but fail one requirement"
+      ]
+    },
+    "ui": {
+      "deep_dive_enabled": true,
+      "flaggable": true
+    }
+  },
+  {
+    "id": "clf-d4-t4.1-cost-explorer-002",
+    "exam": "CLF-C02",
+    "level": "expert",
+    "domain": 4,
+    "task": "4.1",
+    "style": "scenario",
+    "difficulty": 4,
+    "scenario": {
+      "title": "Spend trend analysis and forecasting",
+      "stem": "A public sector agency wants to analyze recent spend trends, compare usage over time, and forecast future cloud costs before next quarter's budget review. Finance wants a visual investigation tool rather than a one-time estimate and needs enough history to discuss cost movement with leadership. Which AWS service best fits?",
+      "business_context": [
+        "historical spend analysis",
+        "forecasting before budget review",
+        "visual financial investigation"
+      ],
+      "constraints": [
+        "trend analysis",
+        "forecasting",
+        "interactive cost review"
+      ]
+    },
+    "options": [
+      {
+        "id": "A",
+        "label": "AWS Cost Explorer",
+        "is_correct": true,
+        "rationale": "It is built for cost and usage analysis, historical review, and forecasting."
+      },
+      {
+        "id": "B",
+        "label": "AWS Budgets",
+        "is_correct": false,
+        "rationale": "It is great for thresholds and alerts, but it is not the primary exploratory analysis tool."
+      },
+      {
+        "id": "C",
+        "label": "AWS Pricing Calculator",
+        "is_correct": false,
+        "rationale": "It estimates planned architectures rather than analyzing actual spend history."
+      },
+      {
+        "id": "D",
+        "label": "AWS Support Center",
+        "is_correct": false,
+        "rationale": "It manages support interactions, not cost analysis."
+      }
+    ],
+    "answer": {
+      "correct_option_ids": ["A"],
+      "explanation": "AWS Cost Explorer is the best fit because it supports interactive cost and usage analysis, historical lookback, and forward forecasting for budgeting discussions.",
+      "why_others_fail": [
+        "Budgets helps with thresholds and alerts, but it is not the main trend-analysis tool.",
+        "Pricing Calculator models future designs rather than actual historical spend.",
+        "Support Center is not a billing analytics service."
+      ]
+    },
+    "aws_docs": {
+      "sources": [
+        {
+          "service": "AWS Cost Explorer",
+          "doc_type": "best_practices",
+          "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html",
+          "section_titles": ["Analyzing your costs and usage with AWS Cost Explorer"],
+          "snippet_markdown": "AWS Cost Explorer enables teams to view and analyze cost and usage, look back up to 13 months, and forecast likely spend for the next 18 months. It helps identify areas that need further inquiry and understand cost trends over time."
+        }
+      ],
+      "deep_dive_primary_url": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html",
+      "deep_dive_sections": ["Analyzing your costs and usage with AWS Cost Explorer"]
+    },
+    "generation": {
+      "template_id": "d4_cost_explorer_trends",
+      "variant_key": "forecast-and-history-budget-review",
+      "generated_at": "2026-04-07",
+      "generator_version": "1.0.0",
+      "review_status": "reviewed"
+    },
+    "quality": {
+      "distractor_rule": "All distractors are real AWS cost or support services that nearly fit but miss the historical-trend-analysis requirement.",
+      "anti_patterns_checked": [
+        "no definition wording",
+        "no hint-heavy answer labels",
+        "all distractors are plausible but fail one requirement"
+      ]
+    },
+    "ui": {
+      "deep_dive_enabled": true,
+      "flaggable": true
+    }
+  }
+]

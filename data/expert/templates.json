@@ -1,0 +1,99 @@
+{
+  "generator_version": "1.0.0",
+  "companies": [
+    "A fintech startup",
+    "A healthcare analytics company",
+    "A retail platform",
+    "A media streaming provider",
+    "A logistics software company",
+    "A SaaS vendor",
+    "A manufacturing enterprise",
+    "A public sector agency"
+  ],
+  "constraints": [
+    "the fewest ongoing administrative tasks",
+    "clear operational guardrails before launch",
+    "centralized visibility across teams",
+    "predictable governance before rapid growth",
+    "minimal manual troubleshooting during incidents",
+    "the ability to plan ahead for scale-related bottlenecks"
+  ],
+  "templates": [
+    {
+      "template_id": "d1_well_architected_governance",
+      "domain": 1,
+      "task": "1.2",
+      "docs_ref_keys": ["well_architected_tool_intro"],
+      "correct_service": "AWS Well-Architected Tool",
+      "distractors": ["AWS Trusted Advisor", "AWS Artifact", "AWS CloudFormation"],
+      "stem_template": "{company} is preparing a major product launch and wants architects from several teams to evaluate the workload against AWS best practices before go-live. Leadership also wants the review process to document decisions and highlight reliability, security, and cost risks in a repeatable way. The team needs {constraint}. Which AWS service is the best fit?"
+    },
+    {
+      "template_id": "d2_artifact_hipaa",
+      "domain": 2,
+      "task": "2.2",
+      "docs_ref_keys": ["artifact_agreements"],
+      "correct_service": "AWS Artifact",
+      "distractors": ["AWS Security Hub", "Amazon Macie", "AWS Trusted Advisor"],
+      "stem_template": "{company} is moving a regulated workload to AWS and the compliance team needs to review HIPAA-related agreements and confirm which accounts are covered before production data is uploaded. They do not want a manual ticket-based process and need a self-service source of truth. The team wants {constraint}. Which AWS service should they use?"
+    },
+    {
+      "template_id": "d2_logs_centralization",
+      "domain": 2,
+      "task": "2.2",
+      "docs_ref_keys": ["cloudwatch_logs_intro"],
+      "correct_service": "Amazon CloudWatch Logs",
+      "distractors": ["AWS CloudTrail", "AWS Key Management Service (AWS KMS)", "Amazon Inspector"],
+      "stem_template": "{company} is troubleshooting intermittent production failures across application components and AWS services. Engineers want one place to store, search, and analyze logs instead of pulling files from multiple systems during every incident. The operations lead requires {constraint}. Which AWS service best fits?"
+    },
+    {
+      "template_id": "d3_lambda_batch_low_ops",
+      "domain": 3,
+      "task": "3.3",
+      "docs_ref_keys": ["lambda_best_practices", "ecs_service_quotas"],
+      "correct_service": "AWS Lambda",
+      "distractors": ["AWS Fargate", "Amazon EC2 Spot Instances", "AWS Elastic Beanstalk"],
+      "stem_template": "{company} receives files throughout the day and wants to process them once every night in a short batch window. The engineering team does not want to manage servers or cluster capacity, and the workload is small enough to fit a lightweight event-driven design. The CTO wants {constraint}. Which compute service is the best fit?"
+    },
+    {
+      "template_id": "d3_ecs_quota_planning",
+      "domain": 3,
+      "task": "3.3",
+      "docs_ref_keys": ["ecs_service_quotas"],
+      "correct_service": "Review Amazon ECS service quotas and request increases ahead of launch",
+      "distractors": [
+        "Rely only on Amazon CloudWatch alarms after launch",
+        "Use larger container images to avoid scaling issues",
+        "Move the workload to Amazon S3"
+      ],
+      "stem_template": "{company} plans to launch a containerized service into several Regions and expects an immediate spike in task count during marketing events. The platform team wants to avoid failed scale-out requests caused by account-level defaults and does not want the first signal to come from a customer-facing outage. The team needs {constraint}. What should they do before launch?"
+    },
+    {
+      "template_id": "d4_budgets_guardrails",
+      "domain": 4,
+      "task": "4.1",
+      "docs_ref_keys": ["budgets_best_practices"],
+      "correct_service": "AWS Budgets",
+      "distractors": ["AWS Cost Explorer", "AWS Pricing Calculator", "Amazon CloudWatch Logs"],
+      "stem_template": "{company} has had several surprise cloud-spend spikes after development teams launched temporary resources and forgot to remove them. Finance wants proactive alerts and optional automated actions when spending crosses thresholds, instead of waiting for end-of-month review. The director wants {constraint}. Which AWS service is the best fit?"
+    },
+    {
+      "template_id": "d4_cost_explorer_trends",
+      "domain": 4,
+      "task": "4.1",
+      "docs_ref_keys": ["cost_explorer_intro"],
+      "correct_service": "AWS Cost Explorer",
+      "distractors": ["AWS Budgets", "AWS Pricing Calculator", "AWS Support Center"],
+      "stem_template": "{company} wants to analyze spend trends from recent months, compare usage patterns, and forecast future cloud costs before next quarter's budgeting cycle. Finance also wants a visual tool for investigation rather than a one-time estimate. The team needs {constraint}. Which AWS service best fits?"
+    },
+    {
+      "template_id": "d4_support_plan_selection",
+      "domain": 4,
+      "task": "4.3",
+      "docs_ref_keys": ["support_plans_intro"],
+      "correct_service": "AWS Business Support+",
+      "distractors": ["Basic Support", "AWS Artifact", "AWS Cost Explorer"],
+      "stem_template": "{company} is running production workloads and wants 24/7 access to AWS technical experts, but it does not need the highest enterprise tier. The team also wants more than billing-only help and quota assistance as it scales. Leadership asks for {constraint}. Which current AWS offering is the best fit?"
+    }
+  ]
+}
