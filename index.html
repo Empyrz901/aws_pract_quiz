@@ -40,11 +40,6 @@
   .count-select select { background: #1a2634; color: #e8e8e8; border: 2px solid #2a3a4a; border-radius: 8px;
     padding: 8px 14px; font-size: 1rem; cursor: pointer; }
   .count-select select:focus { outline: none; border-color: #ff9900; }
-  .bank-select { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 0 auto 18px; }
-  .bank-select button { background: #1a2634; color: #e8e8e8; border: 2px solid #2a3a4a; border-radius: 999px; padding: 10px 16px; cursor: pointer; font-size: 0.9rem; }
-  .bank-select button.active { border-color: #ff9900; background: #2a2010; color: #ffddad; }
-  .bank-select button:disabled { opacity: 0.45; cursor: not-allowed; }
-  .bank-status { text-align: center; color: #889; font-size: 0.85rem; margin-bottom: 18px; }
 
   /* Question card */
   .question-card { background: #1a2634; border-radius: 14px; padding: 30px; margin: 20px 0; }
@@ -79,13 +74,6 @@
   .explanation { background: #12202e; border-left: 4px solid #ff9900; border-radius: 0 10px 10px 0;
     padding: 16px 20px; margin-top: 20px; font-size: 0.9rem; line-height: 1.5; color: #bcc; display: none; }
   .explanation.show { display: block; animation: fadeIn 0.3s ease; }
-  .deep-dive { background: #0f2131; border: 1px solid #28435a; border-radius: 12px; padding: 18px 20px; margin-top: 16px; color: #c7d6e3; }
-  .deep-dive h3 { color: #ffb84d; font-size: 0.95rem; margin-bottom: 10px; }
-  .deep-dive p { margin-bottom: 10px; line-height: 1.5; }
-  .deep-dive pre { white-space: pre-wrap; background: #0a1621; border-radius: 10px; padding: 14px; color: #d5e6f5; overflow-x: auto; }
-  .deep-dive ul { margin: 10px 0 0 18px; }
-  .deep-dive li { margin-bottom: 6px; }
-  .deep-dive .source-link { color: #8cc8ff; }
 
   /* Buttons */
   .btn { background: #ff9900; color: #000; border: none; padding: 14px 32px; border-radius: 10px;
@@ -177,11 +165,6 @@
         <input type="checkbox" id="shuffle-toggle" checked style="accent-color:#ff9900"> Shuffle
       </label>
     </div>
-    <div class="bank-select">
-      <button id="bank-standard" class="active" onclick="selectQuestionBank('standard')">Standard Bank</button>
-      <button id="bank-expert" disabled onclick="selectQuestionBank('expert')">Expert Bank</button>
-    </div>
-    <div class="bank-status" id="bank-status">Loading expert manifests...</div>
         <div class="actions" style="justify-content:center">
           <button class="btn" id="btn-start" onclick="startQuiz()">Start Quiz</button>
         </div>
@@ -206,14 +189,12 @@
       <div class="q-text" id="q-text"></div>
       <div class="options" id="q-options"></div>
       <div class="explanation" id="q-explanation"></div>
-      <div class="deep-dive hidden" id="q-deep-dive"></div>
     </div>
 
     <div class="actions">
       <button class="btn-flag hidden" id="btn-flag" onclick="toggleFlag()" title="Report an error in this question via GitHub"><span class="flag-icon"></span> Report error</button>
       <button class="btn btn-outline hidden" id="btn-prev" onclick="prevQuestion()">Prev</button>
       <button class="btn hidden" id="btn-submit" onclick="submitMulti()">Submit</button>
-      <button class="btn btn-outline hidden" id="btn-deep-dive" onclick="toggleDeepDive()">Deep Dive</button>
       <button class="btn hidden" id="btn-next" onclick="nextQuestion()">Next</button>
     </div>
   </div>
@@ -223,38 +204,21 @@
 </div>
 
 <script src="domain1.js"></script>
-<script src="domain1_distractor_200.js"></script>
 <script src="domain2.js"></script>
-<script src="domain2_distractor_200.js"></script>
 <script src="domain3.js"></script>
-<script src="domain3_distractor_200.js"></script>
 <script src="domain4.js"></script>
-<script src="domain4_distractor_200.js"></script>
 <script>
-const LEGACY_RAW_QUESTIONS = [
-  ...DOMAIN1_QUESTIONS.map((q) => ({ ...q, _bank: 'core' })),
-  ...DOMAIN1_DISTRACTOR_QUESTIONS.map((q) => ({ ...q, _bank: 'distractor' })),
-  ...DOMAIN2_QUESTIONS.map((q) => ({ ...q, _bank: 'core' })),
-  ...DOMAIN2_DISTRACTOR_QUESTIONS.map((q) => ({ ...q, _bank: 'distractor' })),
-  ...DOMAIN3_QUESTIONS.map((q) => ({ ...q, _bank: 'core' })),
-  ...DOMAIN3_DISTRACTOR_QUESTIONS.map((q) => ({ ...q, _bank: 'distractor' })),
-  ...DOMAIN4_QUESTIONS.map((q) => ({ ...q, _bank: 'core' })),
-  ...DOMAIN4_DISTRACTOR_QUESTIONS.map((q) => ({ ...q, _bank: 'distractor' }))
+const RAW_QUESTIONS = [
+  ...DOMAIN1_QUESTIONS,
+  ...DOMAIN2_QUESTIONS,
+  ...DOMAIN3_QUESTIONS,
+  ...DOMAIN4_QUESTIONS
 ];
 
-const EXPERT_BANK_INDEX_PATHS = [
-  './data/expert/index.json',
-  'data/expert/index.json',
-  `${window.location.pathname.replace(/\/[^/]*$/, '/') || '/'}data/expert/index.json`
-];
-let LEGACY_OPTION_HINT_AUDIT = null;
-let LEGACY_QUESTION_AUDIT = null;
-let LEGACY_QUESTIONS = [];
-let EXPERT_QUESTIONS = [];
+let OPTION_HINT_AUDIT = null;
+let QUESTION_AUDIT = null;
+let QUESTIONS = [];
 let ALL_QUESTIONS = [];
-let activeQuestionBank = 'standard';
-let expertBankIndex = null;
-let expertBankLoaded = false;
 
 const OPTION_LABEL_EXCEPTIONS = new Set([
   'Amazon RDS for MySQL',
@@ -441,7 +405,8 @@ function auditAndFilterQuestions(questions) {
       invalid_answer_index: 0,
       duplicate_question_text: 0,
       near_duplicate_question: 0,
-      too_short: 0
+      too_short: 0,
+      not_exam_style: 0
     }
   };
 
@@ -459,6 +424,9 @@ function auditAndFilterQuestions(questions) {
     else if (norm) seen.add(norm);
 
     if (text.length < 60) reasons.push('too_short');
+
+    const examStyle = !auditDefinitionLike(text) && (auditConstraintLike(text) || auditScenarioLike(text));
+    if (!examStyle) reasons.push('not_exam_style');
 
     // Catch near-duplicates that differ by template nouns but test the same concept wording.
     const tooSimilar = acceptedSignatures.some((sig) => jaccardSimilarity(sig, signature) >= 0.85);
@@ -519,194 +487,12 @@ const OFFICIAL_EXAM_EXCLUDED_TERMS = [
 ];
 
 function activeQuestions() {
-  return activeQuestionBank === 'expert' && EXPERT_QUESTIONS.length ? EXPERT_QUESTIONS : LEGACY_QUESTIONS;
+  return QUESTIONS;
 }
 
 function updateQuestionPoolUi() {
   ALL_QUESTIONS = activeQuestions();
   document.getElementById('all-count').textContent = `${ALL_QUESTIONS.length} Q`;
-  document.getElementById('bank-standard').classList.toggle('active', activeQuestionBank === 'standard');
-  document.getElementById('bank-expert').classList.toggle('active', activeQuestionBank === 'expert');
-}
-
-function setBankStatus(message) {
-  document.getElementById('bank-status').textContent = message;
-}
-
-function selectQuestionBank(mode) {
-  if (mode === 'expert' && !expertBankLoaded) return;
-  activeQuestionBank = mode === 'expert' ? 'expert' : 'standard';
-  updateQuestionPoolUi();
-  if (activeQuestionBank === 'expert') {
-    setBankStatus(`Expert bank ready: ${EXPERT_QUESTIONS.length} docs-backed questions loaded.`);
-  } else {
-    setBankStatus(`Standard bank ready: ${LEGACY_QUESTIONS.length} active audited questions loaded.`);
-  }
-}
-
-function escapeHtml(text) {
-  return (text || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function renderDeepDiveMarkdown(markdown) {
-  const safe = escapeHtml(markdown || '');
-  const lines = safe.split('\n');
-  const html = [];
-  let inList = false;
-  let inCode = false;
-
-  lines.forEach((line) => {
-    if (line.startsWith('```')) {
-      if (inCode) html.push('</pre>');
-      else html.push('<pre>');
-      inCode = !inCode;
-      return;
-    }
-
-    if (inCode) {
-      html.push(`${line}\n`);
-      return;
-    }
-
-    if (line.startsWith('* ')) {
-      if (!inList) {
-        html.push('<ul>');
-        inList = true;
-      }
-      html.push(`<li>${line.slice(2)}</li>`);
-      return;
-    }
-
-    if (inList) {
-      html.push('</ul>');
-      inList = false;
-    }
-
-    if (!line.trim()) return;
-    html.push(`<p>${line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</p>`);
-  });
-
-  if (inList) html.push('</ul>');
-  if (inCode) html.push('</pre>');
-  return html.join('');
-}
-
-function buildDeepDiveHtml(q) {
-  if (!q || !q._deepDive || !Array.isArray(q._deepDive.sources) || !q._deepDive.sources.length) return '';
-  const sections = q._deepDive.sources.map((source) => `
-    <div class="deep-dive-section">
-      <h3>${escapeHtml(source.service)}${source.section_titles && source.section_titles.length ? ` · ${escapeHtml(source.section_titles.join(', '))}` : ''}</h3>
-      ${renderDeepDiveMarkdown(source.snippet_markdown)}
-      <p><a class="source-link" href="${source.url}" target="_blank" rel="noopener noreferrer">Open AWS Docs source</a></p>
-    </div>
-  `).join('');
-  return sections;
-}
-
-function populateDeepDive() {
-  const panel = document.getElementById('q-deep-dive');
-  const q = quiz[current];
-  panel.innerHTML = buildDeepDiveHtml(q);
-  panel.classList.add('hidden');
-}
-
-function canShowDeepDive() {
-  const q = quiz[current];
-  return !!(q && q._deepDive && q._deepDive.sources && q._deepDive.sources.length && !officialSimulation);
-}
-
-function updateDeepDiveButton() {
-  const btn = document.getElementById('btn-deep-dive');
-  const answeredCurrent = !!results[current];
-  btn.classList.toggle('hidden', !(answeredCurrent && canShowDeepDive()));
-}
-
-function toggleDeepDive() {
-  const panel = document.getElementById('q-deep-dive');
-  if (panel.classList.contains('hidden')) panel.classList.remove('hidden');
-  else panel.classList.add('hidden');
-}
-
-function normalizeExpertQuestion(entry) {
-  const optionIds = entry.options.map((opt) => opt.id);
-  const answerIds = entry.answer.correct_option_ids || [];
-  const answerIndices = answerIds.map((id) => optionIds.indexOf(id)).filter((idx) => idx >= 0);
-  const explainParts = [entry.answer.explanation, ...(entry.answer.why_others_fail || [])].filter(Boolean);
-  const normalized = {
-    domain: entry.domain,
-    task: entry.task,
-    q: entry.scenario.stem,
-    opts: entry.options.map((opt) => opt.label),
-    ans: answerIndices.length > 1 ? answerIndices : (answerIndices[0] || 0),
-    explain: explainParts.join(' '),
-    _bank: 'expert',
-    _expert: true,
-    _deepDive: {
-      sources: entry.aws_docs.sources || []
-    },
-    _manifest: entry
-  };
-  if (answerIndices.length > 1) normalized.multi = true;
-  return normalized;
-}
-
-async function loadJson(path) {
-  const res = await fetch(path, { cache: 'no-cache' });
-  if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
-  return res.json();
-}
-
-async function loadFirstAvailableJson(paths) {
-  let lastError = null;
-  for (const path of paths) {
-    try {
-      return {
-        path,
-        data: await loadJson(path)
-      };
-    } catch (err) {
-      lastError = err;
-    }
-  }
-  throw lastError || new Error('No manifest path could be loaded.');
-}
-
-function resolveRelativeUrl(basePath, childPath) {
-  try {
-    return new URL(childPath, new URL(basePath, window.location.href)).toString();
-  } catch (err) {
-    return childPath;
-  }
-}
-
-async function bootstrapExpertBank() {
-  setBankStatus('Loading expert manifests...');
-  try {
-    const loadedIndex = await loadFirstAvailableJson(EXPERT_BANK_INDEX_PATHS);
-    expertBankIndex = loadedIndex.data;
-    const manifestDocs = await Promise.all((expertBankIndex.manifests || []).map((path) => loadJson(resolveRelativeUrl(loadedIndex.path, path))));
-    EXPERT_QUESTIONS = manifestDocs.flatMap((doc) => doc).map(normalizeExpertQuestion);
-    expertBankLoaded = EXPERT_QUESTIONS.length > 0;
-    document.getElementById('bank-expert').disabled = !expertBankLoaded;
-    updateQuestionPoolUi();
-    if (expertBankLoaded) {
-      setBankStatus(`Standard bank ready: ${LEGACY_QUESTIONS.length} active audited questions loaded. Expert bank ready: ${EXPERT_QUESTIONS.length} docs-backed questions loaded.`);
-    } else {
-      setBankStatus(`Standard bank ready: ${LEGACY_QUESTIONS.length} active audited questions loaded. Expert manifests unavailable.`);
-    }
-  } catch (err) {
-    expertBankLoaded = false;
-    document.getElementById('bank-expert').disabled = true;
-    activeQuestionBank = 'standard';
-    updateQuestionPoolUi();
-    setBankStatus(`Standard bank ready: ${LEGACY_QUESTIONS.length} active audited questions loaded. Expert manifests could not be loaded in this browser context.`);
-    console.warn('Expert bank load failed:', err);
-  }
 }
 
 function selectDomain(btn) {
@@ -973,13 +759,11 @@ function pickDiverse(pool, count, doShuffle = true, options = {}) {
   const conceptCounts = new Map(options.initialConceptCounts ? Array.from(options.initialConceptCounts.entries()) : []);
   const taskCounts = new Map();
   const styleCounts = { scenario: 0, constraint: 0, concept: 0, definition: 0 };
-  const sourceCounts = { core: 0, distractor: 0 };
   let multiCount = 0;
 
   const targetStyleCounts = options.targetStyleCounts || null;
   const targetMultiCount = options.targetMultiCount ?? null;
   const conceptCap = options.conceptCap ?? (count >= 50 ? 2 : 1);
-  const sourceCaps = options.sourceCaps || null;
   const recentPenaltyMaps = options.recentPenaltyMaps || null;
 
   while (picks.length < count && ordered.length) {
@@ -987,7 +771,6 @@ function pickDiverse(pool, count, doShuffle = true, options = {}) {
       const style = questionStyleBucket(q.q);
       const cluster = similarityClusterKey(q);
       const concept = conceptFamilyKey(q);
-      const source = q._bank || 'core';
       const fingerprint = questionFingerprint(q);
       const conceptSeen = conceptCounts.get(concept) || 0;
       const taskSeen = taskCounts.get(q.task || 'na') || 0;
@@ -1018,10 +801,6 @@ function pickDiverse(pool, count, doShuffle = true, options = {}) {
         if (q.multi && multiCount >= targetMultiCount) score -= 1.2;
       }
 
-      if (source === 'core') score += 1.5;
-      if (source === 'distractor') score -= 1.6;
-      if (sourceCaps && sourceCaps[source] !== undefined && sourceCounts[source] >= sourceCaps[source]) score -= 12;
-
       if (questionStyleBucket(q.q) === 'definition' && count >= 50) score -= 0.3;
       if (q.multi && q.ans.length === 3) score += 0.2;
       if (recentPenaltyMaps) {
@@ -1033,7 +812,7 @@ function pickDiverse(pool, count, doShuffle = true, options = {}) {
         score -= repeatedConceptCount * 1.3;
       }
 
-      return { idx, score, q, style, cluster, concept, source };
+      return { idx, score, q, style, cluster, concept };
     }).sort((a, b) => b.score - a.score);
 
     const selected = pickCandidateWithVariance(scoredCandidates);
@@ -1045,7 +824,6 @@ function pickDiverse(pool, count, doShuffle = true, options = {}) {
     conceptCounts.set(selected.concept, (conceptCounts.get(selected.concept) || 0) + 1);
     taskCounts.set(selected.q.task || 'na', (taskCounts.get(selected.q.task || 'na') || 0) + 1);
     styleCounts[selected.style] = (styleCounts[selected.style] || 0) + 1;
-    sourceCounts[selected.source] = (sourceCounts[selected.source] || 0) + 1;
     if (selected.q.multi) multiCount++;
   }
 
@@ -1054,9 +832,8 @@ function pickDiverse(pool, count, doShuffle = true, options = {}) {
 
 function buildOfficialSimulationQuiz(pool, doShuffle = true) {
   const eligiblePool = pool.filter(officialExamEligible);
-  const corePool = eligiblePool.filter((q) => q._bank !== 'distractor');
   const recentPenaltyMaps = buildRecentPenaltyMaps(loadRecentOfficialExamHistory());
-  const scoredBasePool = corePool.length >= 50 ? corePool : eligiblePool;
+  const scoredBasePool = eligiblePool;
   const scoredTargets = allocateWeightedCounts(scoredBasePool, 50, EXAM_WEIGHTS, 0.015);
   const scoredBlueprint = buildExamBlueprint(scoredBasePool, 50, 'scored');
   const scoredConceptCounts = new Map();
@@ -1076,7 +853,6 @@ function buildOfficialSimulationQuiz(pool, doShuffle = true) {
       conceptCap: 2,
       initialConceptCounts: scoredConceptCounts,
       usedClusters: scoredClusters,
-      sourceCaps: { core: scoredTargets[domain], distractor: 0 },
       recentPenaltyMaps
     });
 
@@ -1099,16 +875,13 @@ function buildOfficialSimulationQuiz(pool, doShuffle = true) {
         conceptCap: 2,
         initialConceptCounts: scoredConceptCounts,
         usedClusters: scoredClusters,
-        sourceCaps: { core: 50, distractor: 0 },
         recentPenaltyMaps
       }
     ));
   }
 
   const allScoredSet = new Set(scoredQuestions);
-  const remainingCorePool = corePool.filter((q) => !allScoredSet.has(q));
-  const remainingFullPool = eligiblePool.filter((q) => !allScoredSet.has(q));
-  const unscoredBasePool = remainingCorePool.length >= 15 ? remainingCorePool : remainingFullPool;
+  const unscoredBasePool = eligiblePool.filter((q) => !allScoredSet.has(q));
   const unscoredWeights = { 1: 0.20, 2: 0.26, 3: 0.34, 4: 0.20 };
   const unscoredTargets = allocateWeightedCounts(unscoredBasePool, 15, unscoredWeights, 0.05);
   const unscoredBlueprint = buildExamBlueprint(unscoredBasePool, 15, 'unscored');
@@ -1127,7 +900,6 @@ function buildOfficialSimulationQuiz(pool, doShuffle = true) {
       conceptCap: 1,
       initialConceptCounts: scoredConceptCounts,
       usedClusters: scoredClusters,
-      sourceCaps: { core: unscoredTargets[domain], distractor: remainingCorePool.length >= 15 ? 0 : 2 },
       recentPenaltyMaps
     });
 
@@ -1141,7 +913,7 @@ function buildOfficialSimulationQuiz(pool, doShuffle = true) {
   if (unscoredQuestions.length < 15) {
     const allPicked = new Set([...scoredQuestions, ...unscoredQuestions]);
     unscoredQuestions = unscoredQuestions.concat(pickDiverse(
-      remainingFullPool.filter((q) => !allPicked.has(q)),
+      unscoredBasePool.filter((q) => !allPicked.has(q)),
       15 - unscoredQuestions.length,
       doShuffle,
       {
@@ -1150,7 +922,6 @@ function buildOfficialSimulationQuiz(pool, doShuffle = true) {
         conceptCap: 1,
         initialConceptCounts: scoredConceptCounts,
         usedClusters: scoredClusters,
-        sourceCaps: { core: 15, distractor: 3 },
         recentPenaltyMaps
       }
     ));
@@ -1374,7 +1145,6 @@ function renderQuestion() {
     : '';
   document.getElementById('q-number').textContent = `Question ${current+1} of ${quiz.length}${scoredHint}`;
   document.getElementById('q-text').textContent = q.q;
-  populateDeepDive();
 
   const isMulti = q.multi;
   const requiredCount = isMulti ? q.ans.length : 1;
@@ -1431,7 +1201,6 @@ function renderQuestion() {
   document.getElementById('btn-prev').classList.toggle('hidden', current === 0);
   document.getElementById('btn-submit').classList.add('hidden');
   document.getElementById('btn-next').classList.remove('hidden');
-  updateDeepDiveButton();
   if (officialSimulation) {
     document.getElementById('btn-next').textContent = current < quiz.length - 1 ? 'Next' : 'Finish Exam';
   } else if (alreadyAnswered) {
@@ -1576,7 +1345,6 @@ function showPostAnswer() {
   }
 
   document.getElementById('btn-submit').classList.add('hidden');
-  updateDeepDiveButton();
   document.getElementById('btn-next').classList.remove('hidden');
   document.getElementById('btn-next').textContent = current < quiz.length - 1 ? 'Next' : 'See Results';
 }
@@ -1733,13 +1501,12 @@ function retryWrong() {
   renderQuestion();
 }
 
-LEGACY_OPTION_HINT_AUDIT = sanitizeQuestionOptionHints(LEGACY_RAW_QUESTIONS);
-LEGACY_QUESTION_AUDIT = auditAndFilterQuestions(LEGACY_OPTION_HINT_AUDIT.cleaned);
-LEGACY_QUESTIONS = LEGACY_QUESTION_AUDIT.cleaned;
+OPTION_HINT_AUDIT = sanitizeQuestionOptionHints(RAW_QUESTIONS);
+QUESTION_AUDIT = auditAndFilterQuestions(OPTION_HINT_AUDIT.cleaned);
+QUESTIONS = QUESTION_AUDIT.cleaned;
 updateQuestionPoolUi();
-console.log('Legacy option hint cleanup report:', LEGACY_OPTION_HINT_AUDIT.report);
-console.log('Legacy question audit report:', LEGACY_QUESTION_AUDIT.report);
-bootstrapExpertBank();
+console.log('Option hint cleanup report:', OPTION_HINT_AUDIT.report);
+console.log('Question audit report:', QUESTION_AUDIT.report);
 </script>
 </body>
 </html>
