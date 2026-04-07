@@ -242,12 +242,16 @@ const LEGACY_RAW_QUESTIONS = [
   ...DOMAIN4_DISTRACTOR_QUESTIONS.map((q) => ({ ...q, _bank: 'distractor' }))
 ];
 
-const EXPERT_BANK_INDEX_URL = 'data/expert/index.json';
-const LEGACY_OPTION_HINT_AUDIT = sanitizeQuestionOptionHints(LEGACY_RAW_QUESTIONS);
-const LEGACY_QUESTION_AUDIT = auditAndFilterQuestions(LEGACY_OPTION_HINT_AUDIT.cleaned);
-const LEGACY_QUESTIONS = LEGACY_QUESTION_AUDIT.cleaned;
+const EXPERT_BANK_INDEX_PATHS = [
+  './data/expert/index.json',
+  'data/expert/index.json',
+  `${window.location.pathname.replace(/\/[^/]*$/, '/') || '/'}data/expert/index.json`
+];
+let LEGACY_OPTION_HINT_AUDIT = null;
+let LEGACY_QUESTION_AUDIT = null;
+let LEGACY_QUESTIONS = [];
 let EXPERT_QUESTIONS = [];
-let ALL_QUESTIONS = LEGACY_QUESTIONS;
+let ALL_QUESTIONS = [];
 let activeQuestionBank = 'standard';
 let expertBankIndex = null;
 let expertBankLoaded = false;
@@ -514,9 +518,6 @@ const OFFICIAL_EXAM_EXCLUDED_TERMS = [
   /\baws elemental mediaconvert\b/i
 ];
 
-console.log('Legacy option hint cleanup report:', LEGACY_OPTION_HINT_AUDIT.report);
-console.log('Legacy question audit report:', LEGACY_QUESTION_AUDIT.report);
-
 function activeQuestions() {
   return activeQuestionBank === 'expert' && EXPERT_QUESTIONS.length ? EXPERT_QUESTIONS : LEGACY_QUESTIONS;
 }
@@ -660,11 +661,35 @@ async function loadJson(path) {
   return res.json();
 }
 
+async function loadFirstAvailableJson(paths) {
+  let lastError = null;
+  for (const path of paths) {
+    try {
+      return {
+        path,
+        data: await loadJson(path)
+      };
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError || new Error('No manifest path could be loaded.');
+}
+
+function resolveRelativeUrl(basePath, childPath) {
+  try {
+    return new URL(childPath, new URL(basePath, window.location.href)).toString();
+  } catch (err) {
+    return childPath;
+  }
+}
+
 async function bootstrapExpertBank() {
   setBankStatus('Loading expert manifests...');
   try {
-    expertBankIndex = await loadJson(EXPERT_BANK_INDEX_URL);
-    const manifestDocs = await Promise.all((expertBankIndex.manifests || []).map((path) => loadJson(path)));
+    const loadedIndex = await loadFirstAvailableJson(EXPERT_BANK_INDEX_PATHS);
+    expertBankIndex = loadedIndex.data;
+    const manifestDocs = await Promise.all((expertBankIndex.manifests || []).map((path) => loadJson(resolveRelativeUrl(loadedIndex.path, path))));
     EXPERT_QUESTIONS = manifestDocs.flatMap((doc) => doc).map(normalizeExpertQuestion);
     expertBankLoaded = EXPERT_QUESTIONS.length > 0;
     document.getElementById('bank-expert').disabled = !expertBankLoaded;
@@ -1708,7 +1733,12 @@ function retryWrong() {
   renderQuestion();
 }
 
+LEGACY_OPTION_HINT_AUDIT = sanitizeQuestionOptionHints(LEGACY_RAW_QUESTIONS);
+LEGACY_QUESTION_AUDIT = auditAndFilterQuestions(LEGACY_OPTION_HINT_AUDIT.cleaned);
+LEGACY_QUESTIONS = LEGACY_QUESTION_AUDIT.cleaned;
 updateQuestionPoolUi();
+console.log('Legacy option hint cleanup report:', LEGACY_OPTION_HINT_AUDIT.report);
+console.log('Legacy question audit report:', LEGACY_QUESTION_AUDIT.report);
 bootstrapExpertBank();
 </script>
 </body>
