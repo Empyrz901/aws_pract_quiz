@@ -1503,7 +1503,7 @@ function retryWrong() {
 
 OPTION_HINT_AUDIT = sanitizeQuestionOptionHints(RAW_QUESTIONS);
 QUESTION_AUDIT = auditAndFilterQuestions(OPTION_HINT_AUDIT.cleaned);
-QUESTIONS = QUESTION_AUDIT.cleaned;
+QUESTIONS = OPTION_HINT_AUDIT.cleaned;
 updateQuestionPoolUi();
 console.log('Option hint cleanup report:', OPTION_HINT_AUDIT.report);
 console.log('Question audit report:', QUESTION_AUDIT.report);
