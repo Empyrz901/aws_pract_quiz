@@ -751,6 +751,30 @@ function isHardExamStyle(q) {
   return !isDefinitionLikeQuestion(q.q) && (isConstraintDriven(q.q) || isScenarioQuestion(q.q));
 }
 
+function questionIssueStyleScore(q) {
+  if (!q || !q.q || !Array.isArray(q.opts)) return 0;
+  const text = (q.q || '').toLowerCase();
+  let score = 0;
+
+  if (isScenarioQuestion(q.q)) score += 1.4;
+  if (isConstraintDriven(q.q)) score += 1.1;
+  if (q.multi) score += Array.isArray(q.ans) ? Math.min(1.8, 0.9 + (q.ans.length * 0.25)) : 0.9;
+
+  if (/(enforce|detect|prevent|monitor|govern|investigate|restrict|forecast|attribute|compare|audit|protect)/.test(text)) {
+    score += 0.8;
+  }
+
+  if (/(select two|choose two|use together|combine|which two)/.test(text)) score += 0.9;
+  if (text.length >= 95 && text.length <= 240) score += 0.7;
+  if (text.length < 70) score -= 0.9;
+
+  if (auditDefinitionLike(q.q)) score -= 1.8;
+  if (/which (service|tool) should (they|the team|the company) use\?/i.test(q.q || '')) score -= 0.45;
+  if (/which option best addresses this requirement\?$/i.test(q.q || '')) score -= 0.35;
+
+  return score;
+}
+
 function pickDiverse(pool, count, doShuffle = true, options = {}) {
   if (!pool.length || count <= 0) return [];
   const ordered = doShuffle ? shuffle([...pool]) : [...pool];
@@ -801,7 +825,9 @@ function pickDiverse(pool, count, doShuffle = true, options = {}) {
         if (q.multi && multiCount >= targetMultiCount) score -= 1.2;
       }
 
-      if (questionStyleBucket(q.q) === 'definition' && count >= 50) score -= 0.3;
+      score += questionIssueStyleScore(q);
+
+      if (questionStyleBucket(q.q) === 'definition' && count >= 50) score -= 1.2;
       if (q.multi && q.ans.length === 3) score += 0.2;
       if (recentPenaltyMaps) {
         const repeatedQuestionCount = recentPenaltyMaps.questionCounts.get(fingerprint) || 0;
@@ -958,7 +984,12 @@ function startQuiz() {
     scoredQuestionIndices = built.scoredIndices;
     saveRecentOfficialExamHistory(quiz);
   } else {
-    quiz = pickDiverse(pool, count, doShuffle);
+    const genericBlueprint = buildExamBlueprint(pool, count, count >= 50 ? 'scored' : 'generic');
+    quiz = pickDiverse(pool, count, doShuffle, {
+      targetStyleCounts: genericBlueprint.styleCounts,
+      targetMultiCount: genericBlueprint.multiTarget,
+      conceptCap: count >= 50 ? 2 : 1
+    });
     scoredQuestionIndices = new Set(Array.from({ length: quiz.length }, (_, i) => i));
   }
 
