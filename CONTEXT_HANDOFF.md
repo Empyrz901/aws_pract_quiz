@@ -1,152 +1,107 @@
 # Project Context Handoff
 
-## Repository Purpose
+## Purpose
+This repository is a static AWS Certified Cloud Practitioner (`CLF-C02`) practice quiz app.
 
-This repository is a lightweight AWS Certified Cloud Practitioner (`CLF-C02`) practice quiz site.
+Primary objective:
+- keep the quiz close to real-exam style and difficulty
+- keep the codebase simple and easy to maintain
+- keep a large active question bank (target direction has been 400+ and growing)
 
-Current goals:
+## Current Architecture
+Single-page static app with no build step.
 
-- keep the repository as simple as possible
-- keep only one active question system
-- make the quiz feel close to the real exam
-- keep more than 400 active questions in the bank
+Core files:
+- `index.html`: full UI + runtime quiz logic
+- `domain1.js`: Domain 1 question bank
+- `domain2.js`: Domain 2 question bank
+- `domain3.js`: Domain 3 question bank
+- `domain4.js`: Domain 4 question bank
+- `README.md`: user-facing overview
+- `CONTEXT_HANDOFF.md`: this handoff context
 
-## Current Structure
+Deliberate simplification:
+- no expert manifest pipeline in active flow
+- no active generator dependency for runtime
+- no extra layered distractor files in the active architecture
 
-The repo is intentionally minimal now:
+## Product/UX Rules
+- Default question count is `65` (official-length mode).
+- The old `Agent Take 65` button is removed.
+- For official-length mode, immediate correct/incorrect feedback is hidden until later in the flow.
+- Domain selection and optional shuffle are available.
+- Question data is loaded directly from the 4 domain JS files into `RAW_QUESTIONS`.
 
-- `index.html`
-- `domain1.js`
-- `domain2.js`
-- `domain3.js`
-- `domain4.js`
-- `README.md`
-- `CONTEXT_HANDOFF.md`
+## Question Object Contract
+Each entry follows this pattern:
+```js
+{
+  domain: 3,
+  task: "3.6",
+  q: "Scenario-based prompt...",
+  opts: ["Option A", "Option B", "Option C", "Option D"],
+  ans: 1,
+  explain: "Short rationale..."
+}
+```
 
-There is no expert-bank manifest system anymore.
-There are no generator scripts anymore.
-There are no distractor-bank files in the active architecture.
+Multi-select format:
+```js
+{
+  ...,
+  ans: [0, 2],
+  multi: true
+}
+```
 
-The live question bank is entirely contained in the four domain files.
+## Authoring Standards (Important)
+The most common regressions in this repo were content-quality related, not code bugs.
 
-## Domain Files
+Keep:
+- scenario-based stems (2-4 business context sentences when possible)
+- plausible distractors (real AWS options that fail one requirement)
+- CLF-C02 scope by domain and task mapping
 
-- `domain1.js`: Cloud Concepts
-- `domain2.js`: Security and Compliance
-- `domain3.js`: Cloud Technology and Services
-- `domain4.js`: Billing, Pricing, and Support
+Avoid:
+- definition-only trivia
+- explicit answer hints embedded in option labels
+- em-dash hint style in options/explanations
+- repetitive stem patterns like "Which service/tool should they use?" everywhere
+- clones/near-clones of the same question across one domain
 
-Question counts at the last checked state during the most recent difficulty pass:
+## Known Quality Sensitivities
+Recent issue themes in GitHub:
+- duplicated or near-duplicated support questions in Domain 4
+- hints in options that make answers too obvious
+- questions too direct compared to real exam style
 
-- `domain1.js`: 93
-- `domain2.js`: 129
-- `domain3.js`: 123
-- `domain4.js`: 79
+When fixing one flagged question, search for pattern duplicates and patch all matching variants in one pass.
 
-Total: `424`
+## Issue Triage Workflow
+1. Pull open issues from GitHub.
+2. Map issue text to exact bank entries with `rg`.
+3. Fix flagged question.
+4. Search for near duplicates by intent and stem pattern.
+5. Re-check syntax and run a quick content grep for known bad patterns.
 
-## Recent Product Decisions
+Useful grep patterns:
+- `rg -n "Which service/tool should they use\\?" domain*.js`
+- `rg -n " -- |—" domain*.js`
+- `rg -n "automated recommendations and a structured" domain*.js`
 
-### Simplification
+## Practical Dev Notes
+- This app is static; local verification can be done by opening `index.html` in a browser.
+- If runtime errors occur (e.g., undefined bank var, token/brace mismatch), inspect the affected domain file first.
+- Keep commits small by domain or issue cluster.
 
-The repo was simplified on purpose.
+## Resume From Another Host
+1. Pull latest `main`.
+2. Open `index.html` plus all four `domain*.js` files.
+3. Confirm quiz starts and question count is displayed correctly.
+4. Spot-check Domain 3 and Domain 4 for style fidelity and duplicate logic.
+5. Check GitHub open issues and fix globally (not one-off).
 
-Older systems were removed:
-
-- expert bank JSON manifests
-- generator scripts
-- extra audit/prune scripts
-- extra question-bank layers
-
-The project now uses a single-source approach:
-
-- four domain files
-- one HTML app
-
-### Exam Realism Direction
-
-The main product direction is:
-
-- not a broad study guide
-- not a definition bank
-- much closer to real CLF-C02 exam feel
-
-Recent work focused on:
-
-- removing stale and out-of-scope service references
-- removing descriptive hints from answer choices
-- removing em-dash hints from answer choices
-- rewriting direct "Which service/tool should they use?" prompts
-- replacing the easiest questions with harder scenario-based versions
-
-### UI Behavior
-
-Important current quiz behavior:
-
-- `65` is the default exam length
-- the old `Agent Take 65` button was removed
-- during `65` question mode, immediate correctness feedback is hidden until the end
-
-## Current Quality State
-
-The bank is in a much better state than earlier revisions.
-
-Current honest position:
-
-- scope compliance: close
-- real-exam fidelity: improved significantly
-- still not guaranteed to be identical to the real AWS exam
-
-The most recent major rewrite targeted the weakest remaining questions:
-
-- early Shared Responsibility questions in Domain 2
-- direct service-catalog questions in Domain 3
-- pricing/support trivia in Domain 4
-- easy migration/cost-allocation questions in Domain 1
-
-The latest sweep also verified:
-
-- no tracked em-dash hints in option blocks
-- no remaining matches for the weakest direct stem patterns that were being targeted in the last pass
-
-## Important Recent Commits
-
-Latest known important commits:
-
-- `9783eea` `Replace easiest questions with harder scenarios`
-- `8e79591` `Remove em dash hints from answer choices`
-- `57cfc54` `Improve question authoring realism`
-- `f4c841e` `Simplify repository and expand question bank`
-
-These are useful anchor points if future work needs to understand when simplification and realism passes happened.
-
-## Recommended Next Steps
-
-If continuing from another location, the highest-value next steps are:
-
-1. Run another realism audit focused on distractor quality, not just stems.
-2. Identify the easiest remaining 25-50 questions by reading Domain 3 first, then Domain 4.
-3. Replace questions where only one answer is remotely plausible.
-4. Keep the repo simple; do not reintroduce extra content systems unless there is a strong reason.
-5. Preserve the no-hint rule in answer options:
-   - no descriptive answer labels
-   - no em-dash explanations inside options
-   - no giveaway wording embedded in the correct answer
-
-## Working Conventions That Have Helped
-
-- Keep commits small and descriptive.
-- Use official AWS docs when checking current factual accuracy.
-- Prefer scenario-based stems over direct service lookup.
-- Prefer realistic near-miss distractors over obviously wrong distractors.
-- Do not add back removed architecture complexity unless explicitly desired.
-
-## Resume Checklist
-
-If resuming elsewhere:
-
-1. Open `index.html` and the four `domain*.js` files.
-2. Confirm the bank still loads and the quiz starts normally.
-3. Spot-check Domain 3 and Domain 4 first for realism drift.
-4. Search for easy-pattern stems or answer-hint regressions before adding new questions.
-5. Commit only after a quick `git diff --check` sanity pass.
+## Next High-Value Work
+- Continue expanding bank size while preserving realism and distractor quality.
+- Add a lightweight lint/audit script for content rules (duplicate stems, hint phrases, forbidden separators).
+- Periodically recalibrate against official AWS docs and contemporary CLF-C02 style.
